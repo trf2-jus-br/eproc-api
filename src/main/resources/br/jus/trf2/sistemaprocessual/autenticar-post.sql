@@ -1,19 +1,17 @@
-SELECT
-	N.NOME_PESSOA
-,	S.PASSWORD
-FROM
-	SENHA_MYSQL				S
-,	PESSOA					P
-,	PESSOA_IDENTIFICACAO	I
-,	PESSOA_NOME				N
-WHERE
-	P.ID_PESSOA				=	S.ID_PESSOA
-AND	P.ID_PESSOA				=	I.ID_PESSOA
-AND	P.ID_PESSOA				=	N.ID_PESSOA
-AND	P.SEQ_NOME				=	N.SEQ_NOME_PESSOA
-AND	P.COD_TIPO_PESSOA		=	'PF'
-AND	S.DTH_DESATIVACAO		IS	NULL
-AND	S.SIN_ATIVO				=	'S'
-AND	S.PASSWORD				=	'$2a$12$7cOkE3Y5bEQvd/N2eNZcWeTDdtTKM3k1p4lAYTiarLKOubG8MGEym'
-AND	I.TIPO_IDENTIFICACAO	=	'SIGLA'
-AND	I.IDENT_PRINCIPAL		=	:username
+select
+	s.password	hash
+from
+	senha_mysql				s
+,	pessoa					p
+,	pessoa_identificacao	i
+,	pessoa_nome				n
+where
+	p.id_pessoa				=	s.id_pessoa
+and	p.id_pessoa				=	i.id_pessoa
+and	p.id_pessoa				=	n.id_pessoa
+and	p.seq_nome				=	n.seq_nome_pessoa
+and	p.cod_tipo_pessoa		=	'PF'
+and	s.dth_desativacao		is	null
+and	s.sin_ativo				=	'S'
+and	i.tipo_identificacao	=	'SIGLA'
+and	i.ident_principal		=	?

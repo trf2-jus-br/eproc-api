@@ -1,14 +1,14 @@
 package br.jus.trf2.sistemaprocessual;
 
 import java.nio.charset.StandardCharsets;
-import java.security.NoSuchAlgorithmException;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
-import javax.persistence.Query;
+import org.mindrot.jbcrypt.BCrypt;
 
 import com.crivano.swaggerservlet.PresentableException;
 import com.crivano.swaggerservlet.PresentableUnloggedException;
-import com.crivano.swaggerservlet.SwaggerUtils;
 
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.AutenticarPostRequest;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.AutenticarPostResponse;
@@ -23,19 +23,37 @@ public class AutenticarPost implements IAutenticarPost {
 		if (req.senha == null)
 			throw new PresentableException("É necessário informar a senha");
 
-		String senha = SwaggerUtils.base64Encode(Utils.calcSha256(req.senha.getBytes(StandardCharsets.UTF_8)));
+		String hash = null;
+		try (Connection conn = Utils.getConnection();
+				PreparedStatement q = conn.prepareStatement(Utils.getSQL("autenticar-post"));
+				PreparedStatement q2 = conn.prepareStatement(Utils.getSQL("usuario-web-username-get"))) {
+			q.setString(1, req.login);
+			ResultSet rs = q.executeQuery();
 
-		Query q = PersistenceManager.INSTANCE.getEntityManager().createNativeQuery(Utils.getSQL("autenticar-post"));
-		q.setParameter("login", req.login);
-		List<Object[]> l = q.getResultList();
+			while (rs.next()) {
+				hash = rs.getString("hash");
+				break;
+			}
 
-		if (l == null || l.size() == 0)
-			throw new PresentableUnloggedException("Usuário ou senha inválidos");
+			if (hash == null)
+				throw new PresentableException("Usuário não encontrado");
 
-		resp.cpf = null;
-		resp.email = "test@example.com";
-		Object[] r = l.get(0);
-		resp.nome = (String) r[0];
+			String senha = Utils.asHex(Utils.calcSha256(req.senha.getBytes(StandardCharsets.UTF_8)));
+			String hashDeTeste = BCrypt.hashpw(senha, hash);
+
+			if (!hashDeTeste.equals(hash))
+				throw new PresentableUnloggedException("Usuário ou senha inválidos");
+
+			q2.setString(1, req.login);
+			ResultSet rs2 = q2.executeQuery();
+
+			while (rs2.next()) {
+				resp.nome = rs2.getString("nome");
+				resp.cpf = rs2.getString("cpf");
+				resp.email = rs2.getString("email");
+				break;
+			}
+		}
 	}
 
 	@Override
@@ -43,11 +61,11 @@ public class AutenticarPost implements IAutenticarPost {
 		return "autenticar usuário";
 	}
 
-	public static void main(String[] args) throws NoSuchAlgorithmException {
+	public static void main(String[] args) throws Exception {
 		String s = "senha";
-		String senha = SwaggerUtils.base64Encode(Utils.calcSha256(s.getBytes(StandardCharsets.UTF_8)));
+		String senha = Utils.asHex(Utils.calcSha256(s.getBytes()));
 		System.out.println(senha);
-
+		System.out.println(BCrypt.hashpw(senha, "$2a$12$7cOkE3Y5bEQvd/N2eNZcWeTDdtTKM3k1p4lAYTiarLKOubG8MGEym"));
 	}
 
 }
