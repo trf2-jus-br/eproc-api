@@ -4,18 +4,15 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 
 import org.mindrot.jbcrypt.BCrypt;
 
-import com.crivano.swaggerservlet.ISwaggerModel;
 import com.crivano.swaggerservlet.PresentableException;
 import com.crivano.swaggerservlet.PresentableUnloggedException;
 import com.crivano.swaggerservlet.SwaggerServlet;
 import com.crivano.swaggerservlet.SwaggerUtils;
 
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioWebUsernameGet;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.Usuario;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioWebUsernameGetRequest;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioWebUsernameGetResponse;
 
@@ -68,18 +65,6 @@ public class UsuarioWebUsernameGet implements IUsuarioWebUsernameGet {
 				resp.email = rs2.getString("email");
 				break;
 			}
-
-			resp.usuarios = new ArrayList<>();
-			Usuario u = new Usuario();
-			u.orgao = "JFRJ";
-			u.codusu = null;
-			u.codusuweb = null;
-			u.codunidade = null;
-			u.nome = resp.nome;
-			u.cpf = resp.cpf;
-			u.email = resp.email;
-			u.perfil = null;
-			resp.usuarios.add(u);
 		}
 	}
 
