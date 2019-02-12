@@ -4,11 +4,16 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.util.Date;
 import java.util.Scanner;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import com.crivano.swaggerservlet.SwaggerUtils;
 
@@ -77,6 +82,13 @@ public class Utils {
 		}
 
 		return strbuf.toString();
+	}
+
+	private static final DateTimeFormatter dtfBRHHMM = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
+
+	public static String formatarDataHoraMinuto(Date d) {
+		DateTime dt = new DateTime(d.getTime());
+		return dt.toString(dtfBRHHMM);
 	}
 
 }
