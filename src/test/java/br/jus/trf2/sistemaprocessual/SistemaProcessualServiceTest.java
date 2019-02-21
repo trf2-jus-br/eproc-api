@@ -12,7 +12,6 @@ public class SistemaProcessualServiceTest extends SwaggerTestSupport {
 
 	@Override
 	protected String getPackage() {
-		// TODO Auto-generated method stub
 		return "br.jus.trf2.sistemaprocessual";
 	}
 

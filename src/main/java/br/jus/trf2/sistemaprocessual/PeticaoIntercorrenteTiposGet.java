@@ -16,7 +16,7 @@ public class PeticaoIntercorrenteTiposGet implements IPeticaoIntercorrenteTiposG
 		TipoPeticaoIntercorrente tpi = new TipoPeticaoIntercorrente();
 		tpi.id = "1";
 		tpi.descricao = "Teste";
-		tpi.orgao = "JFRJ";
+		tpi.sistema = "br.jus.jfrj.eproc";
 		resp.list.add(tpi);
 	}
 
