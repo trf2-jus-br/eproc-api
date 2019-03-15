@@ -4,6 +4,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import org.mindrot.jbcrypt.BCrypt;
 
@@ -43,6 +44,7 @@ public class UsuarioWebUsernameGet implements IUsuarioWebUsernameGet {
 			ResultSet rs = q.executeQuery();
 
 			while (rs.next()) {
+				resp.codusu = rs.getString("codusu");
 				hash = rs.getString("hash");
 				break;
 			}
@@ -59,12 +61,25 @@ public class UsuarioWebUsernameGet implements IUsuarioWebUsernameGet {
 			q2.setString(1, login);
 			ResultSet rs2 = q2.executeQuery();
 
+			// TODO: lançar exceção se não houver nome, cpf e email
 			while (rs2.next()) {
 				resp.nome = rs2.getString("nome");
 				resp.cpf = rs2.getString("cpf");
 				resp.email = rs2.getString("email");
 				break;
 			}
+		}
+	}
+
+	public static String getIdPessoaFromUsername(Connection conn, String login) throws SQLException {
+		try (PreparedStatement q = conn.prepareStatement(Utils.getSQL("autenticar-post"))) {
+			q.setString(1, login);
+			ResultSet rs = q.executeQuery();
+
+			while (rs.next()) {
+				return rs.getString("codusu");
+			}
+			return null;
 		}
 	}
 

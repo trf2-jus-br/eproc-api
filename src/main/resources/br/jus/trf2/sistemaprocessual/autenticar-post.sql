@@ -1,5 +1,6 @@
 select
-	s.password	hash
+	p.id_pessoa	codusu
+,	s.password	hash
 from
 	senha_mysql				s
 ,	pessoa					p

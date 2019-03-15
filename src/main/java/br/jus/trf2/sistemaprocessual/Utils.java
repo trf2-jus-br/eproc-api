@@ -15,11 +15,11 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import com.crivano.swaggerservlet.SwaggerUtils;
+import com.crivano.swaggerservlet.SwaggerServlet;
 
 public class Utils {
 	public static Connection getConnection() throws Exception {
-		String dsName = Utils.getProperty("datasource.name", null);
+		String dsName = SwaggerServlet.getProperty("datasource.name");
 		if (dsName != null) {
 			Context initContext = new InitialContext();
 			Context envContext = (Context) initContext.lookup("java:");
@@ -33,20 +33,16 @@ public class Utils {
 
 			Class.forName("com.mysql.jdbc.Driver");
 
-			String dbURL = Utils.getProperty("datasource.url", null);
-			String username = Utils.getProperty("datasource.username", null);
+			String dbURL = SwaggerServlet.getProperty("datasource.url");
+			String username = SwaggerServlet.getProperty("datasource.username");
 			;
-			String password = Utils.getProperty("datasource.password", null);
+			String password = SwaggerServlet.getProperty("datasource.password");
 			;
 			connection = DriverManager.getConnection(dbURL, username, password);
 			if (connection == null)
 				throw new Exception("Can't open connection to database.");
 			return connection;
 		}
-	}
-
-	public static String getProperty(String propertyName, String defaultValue) {
-		return SwaggerUtils.getProperty(EprocServlet.servletContext + "." + propertyName, defaultValue);
 	}
 
 	public static String getSQL(String filename) {
