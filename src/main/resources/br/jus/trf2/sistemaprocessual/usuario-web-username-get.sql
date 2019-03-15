@@ -1,5 +1,6 @@
 select
-	n.nome_pessoa			nome
+	n.id_pessoa				codusu
+,	n.nome_pessoa			nome
 ,	icpf.ident_principal	cpf
 ,	temail.contato			email
 from

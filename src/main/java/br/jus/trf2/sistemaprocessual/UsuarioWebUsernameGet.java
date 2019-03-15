@@ -63,6 +63,8 @@ public class UsuarioWebUsernameGet implements IUsuarioWebUsernameGet {
 
 			// TODO: lançar exceção se não houver nome, cpf e email
 			while (rs2.next()) {
+				resp.codusu = rs2.getString("codusu");
+				// resp.codunidade = rs2.getString("codunidade");
 				resp.nome = rs2.getString("nome");
 				resp.cpf = rs2.getString("cpf");
 				resp.email = rs2.getString("email");

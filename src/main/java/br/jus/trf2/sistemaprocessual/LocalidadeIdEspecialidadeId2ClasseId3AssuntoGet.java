@@ -24,8 +24,8 @@ public class LocalidadeIdEspecialidadeId2ClasseId3AssuntoGet
 //			q.setInt(1, Integer.parseInt(req.id.substring(0, 2)));
 //			q.setInt(2, Integer.parseInt(req.id.substring(2)));
 //			q.setInt(3, Integer.parseInt(req.id2));
-			q.setInt(1, Integer.parseInt(req.id3));
-			q.setInt(2, Integer.parseInt(req.id3));
+			q.setInt(1, Integer.parseInt(req.id2));
+			q.setInt(2, Integer.parseInt(req.id2));
 			ResultSet rs = q.executeQuery();
 
 			while (rs.next()) {

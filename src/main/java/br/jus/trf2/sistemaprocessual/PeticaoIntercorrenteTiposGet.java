@@ -1,8 +1,12 @@
 package br.jus.trf2.sistemaprocessual;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IPeticaoIntercorrenteTiposGet;
+import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IdNome;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.PeticaoIntercorrenteTiposGetRequest;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.PeticaoIntercorrenteTiposGetResponse;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.TipoPeticaoIntercorrente;
@@ -12,12 +16,20 @@ public class PeticaoIntercorrenteTiposGet implements IPeticaoIntercorrenteTiposG
 	@Override
 	public void run(PeticaoIntercorrenteTiposGetRequest req, PeticaoIntercorrenteTiposGetResponse resp)
 			throws Exception {
-		resp.list = new ArrayList<TipoPeticaoIntercorrente>();
-		TipoPeticaoIntercorrente tpi = new TipoPeticaoIntercorrente();
-		tpi.id = "1";
-		tpi.descricao = "Teste";
-		tpi.sistema = "br.jus.jfrj.eproc";
-		resp.list.add(tpi);
+		resp.list = new ArrayList<>();
+
+		try (Connection conn = Utils.getConnection();
+				PreparedStatement q = conn.prepareStatement(Utils.getSQL("peticao-intercorrente-tipos-documento-get"))) {
+			// q.setString(1, req.numero);
+			ResultSet rs = q.executeQuery();
+
+			while (rs.next()) {
+				TipoPeticaoIntercorrente in = new TipoPeticaoIntercorrente();
+				in.id = rs.getString("id");
+				in.descricao = rs.getString("nome");
+				resp.list.add(in);
+			}
+		}
 	}
 
 	@Override
