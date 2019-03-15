@@ -25,12 +25,12 @@ public class UsuarioWebUsernameAvisoConfirmadoContarGet implements IUsuarioWebUs
 			resp.list = new ArrayList<>();
 			while (rs.next()) {
 				QuantidadeConfirmada r = new QuantidadeConfirmada();
-				r.data = Utils.formatarDataHoraMinuto(rs.getTimestamp("data"));
+				r.data = Utils.formatarData(rs.getTimestamp("yyyymmdd"));
 				r.quantidadeDoGrupoPorConfirmacao = rs.getString("quantidadeDoGrupoPorConfirmacao");
 				r.quantidadeDoGrupoPorOmissao = rs.getString("quantidadeDoGrupoPorOmissao");
 				r.quantidadeDoUsuarioPorConfirmacao = rs.getString("quantidadeDoUsuarioPorConfirmacao");
 				r.quantidadeDoUsuarioPorOmissao = rs.getString("quantidadeDoUsuarioPorOmissao");
-				break;
+				resp.list.add(r);
 			}
 		}
 	}

@@ -1,18 +1,15 @@
-select
-	*
-from
-	log_abre_fecha_prazo
-where
-	id_prazo_processo	in	(
-		select
-			id_prazo_processo
-		from
-			prazo_processo
-		where
-			id_processo_parte	in	(selectid_processo_parte
-		from	processo_parte
-		where
-			id_pessoa	=	?)
-	)
-and	tipo_log			=	'A'		-- Abriu o prazo, isto é, confirmou o aviso/intimação
-and	sin_lancou_prazo	=	'S'		-- Parece óbvio, mas preciso confirmar essa informação
+SELECT 
+	date(pe.dth_evento) as yyyymmdd, 
+	count(*) as quantidadeDoUsuarioPorConfirmacao, 
+	null as quantidadeDoUsuarioPorOmissao, 
+	null as quantidadeDoGrupoPorConfirmacao, 
+	null as quantidadeDoGrupoPorOmissao
+FROM
+	v_usuario u
+	inner join processo_parte_procurador ppp on u.id_usuario = ppp.id_usuario_procurador
+	inner join prazo_processo_parte_procurador pppp on pppp.id_processo_parte_procurador = ppp.id_processo_parte_procurador 
+	inner join prazo_processo pp on pp.id_prazo_processo = pppp.id_prazo_processo
+	inner join processo_evento pe  on pe.id_processo_evento = pp.id_processo_evento_abriu
+where u.id_pessoa = ?
+group by yyyymmdd;
+   

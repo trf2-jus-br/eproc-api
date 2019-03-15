@@ -87,4 +87,11 @@ public class Utils {
 		return dt.toString(dtfBRHHMM);
 	}
 
+	private static final DateTimeFormatter dtfBR = DateTimeFormat.forPattern("dd/MM/yyyy");
+
+	public static String formatarData(Date d) {
+		DateTime dt = new DateTime(d.getTime());
+		return dt.toString(dtfBR);
+	}
+
 }
