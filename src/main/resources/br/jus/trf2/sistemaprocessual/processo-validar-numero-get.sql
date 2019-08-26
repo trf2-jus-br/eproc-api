@@ -36,6 +36,8 @@ select
 	)				sentenciado
 ,	status_processo	=	'B'
 	baixado
+,	status_processo	=	'M' and (com_situacao_processo in (70, 50))
+	perdecompetencia
 ,	(
 		select
 			group_concat(distinct	numero_cda)

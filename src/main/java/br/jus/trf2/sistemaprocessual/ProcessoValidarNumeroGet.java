@@ -29,6 +29,7 @@ public class ProcessoValidarNumeroGet implements IProcessoValidarNumeroGet {
 				resp.eletronico = true;
 				resp.sentenciado = rs.getBoolean("sentenciado");
 				resp.baixado = rs.getBoolean("baixado");
+				resp.perdecompetencia = rs.getBoolean("perdecompetencia");
 				resp.cdas = rs.getString("cdas");
 				resp.dataultimomovimento = Utils.formatarDataHoraMinuto(rs.getTimestamp("dataultimomovimento"));
 				break;
