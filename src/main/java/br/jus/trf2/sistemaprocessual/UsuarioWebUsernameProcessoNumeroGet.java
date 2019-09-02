@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import com.crivano.swaggerservlet.SwaggerServlet;
 import com.crivano.swaggerservlet.SwaggerUtils;
 
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioWebUsernameProcessoNumeroGet;
@@ -22,7 +23,7 @@ public class UsuarioWebUsernameProcessoNumeroGet implements IUsuarioWebUsernameP
 
 			while (rs.next()) {
 				resp.numero = rs.getString("numero");
-				resp.orgao = "JFRJ"; // rs.getString("cpf");
+				resp.orgao = SwaggerServlet.getProperty("orgao.sigla");
 				resp.unidade = rs.getString("unidade");
 				resp.localNaUnidade = rs.getString("localnaunidade"); // Apresentar isso apenas para o público interno
 				resp.usuarioautorizado = true; // Esse nós ainda precisamos descobrir como fazer para pesquisar?

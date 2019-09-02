@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import com.crivano.swaggerservlet.SwaggerServlet;
+
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IProcessoValidarNumeroGet;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.ProcessoValidarNumeroGetRequest;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.ProcessoValidarNumeroGetResponse;
@@ -19,7 +21,7 @@ public class ProcessoValidarNumeroGet implements IProcessoValidarNumeroGet {
 
 			while (rs.next()) {
 				resp.numero = rs.getString("numero");
-				resp.orgao = "JFRJ"; // rs.getString("cpf");
+				//resp.orgao = SwaggerServlet.getProperty("orgao.sigla"); // rs.getString("cpf");
 				resp.unidade = rs.getString("unidade");
 				resp.localNaUnidade = rs.getString("localnaunidade"); // Apresentar isso apenas para o público interno
 				resp.usuarioautorizado = true; // Esse nós ainda precisamos descobrir como fazer para pesquisar?

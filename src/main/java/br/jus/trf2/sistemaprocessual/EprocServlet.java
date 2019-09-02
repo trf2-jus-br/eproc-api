@@ -19,21 +19,26 @@ public class EprocServlet extends SwaggerServlet {
 
 		setActionPackage("br.jus.trf2.sistemaprocessual");
 
+		addPublicProperty("orgao.sigla");
+		
 		addRestrictedProperty("datasource.url", null);
 		if (getProperty("datasource.url") != null) {
 			addRestrictedProperty("datasource.username");
-			addRestrictedProperty("datasource.password");
+			addPrivateProperty("datasource.password");
 			addRestrictedProperty("datasource.name", null);
 		} else {
 			addRestrictedProperty("datasource.username", null);
-			addRestrictedProperty("datasource.password", null);
-			addRestrictedProperty("datasource.name", "balcaovirtualds");
+			addPrivateProperty("datasource.password", null);
+			addRestrictedProperty("datasource.name");
 		}
 
-		addDependency(new TestableDependency("database", "balcaovirtualds", false, 0, 10000) {
+		addDependency(new TestableDependency("database", "eprocapids", false, 0, 10000) {
 			@Override
 			public String getUrl() {
-				return getProperty("datasource.name");
+				String url = getProperty("datasource.name");
+				if (url == null)
+					url = getProperty("datasource.url");
+				return url;
 			}
 
 			@Override
