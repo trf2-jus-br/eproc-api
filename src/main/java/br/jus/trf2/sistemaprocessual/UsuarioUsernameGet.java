@@ -13,14 +13,14 @@ import com.crivano.swaggerservlet.PresentableUnloggedException;
 import com.crivano.swaggerservlet.SwaggerServlet;
 import com.crivano.swaggerservlet.SwaggerUtils;
 
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioWebUsernameGet;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioWebUsernameGetRequest;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioWebUsernameGetResponse;
+import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameGet;
+import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameGetRequest;
+import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameGetResponse;
 
-public class UsuarioWebUsernameGet implements IUsuarioWebUsernameGet {
+public class UsuarioUsernameGet implements IUsuarioUsernameGet {
 
 	@Override
-	public void run(UsuarioWebUsernameGetRequest req, UsuarioWebUsernameGetResponse resp) throws Exception {
+	public void run(UsuarioUsernameGetRequest req, UsuarioUsernameGetResponse resp) throws Exception {
 		String login;
 		String password;
 		String auth = SwaggerServlet.getHttpServletRequest().getHeader("Authorization");
@@ -39,7 +39,7 @@ public class UsuarioWebUsernameGet implements IUsuarioWebUsernameGet {
 		String hash = null;
 		try (Connection conn = Utils.getConnection();
 				PreparedStatement q = conn.prepareStatement(Utils.getSQL("autenticar-post"));
-				PreparedStatement q2 = conn.prepareStatement(Utils.getSQL("usuario-web-username-get"))) {
+				PreparedStatement q2 = conn.prepareStatement(Utils.getSQL("usuario-username-get"))) {
 			q.setString(1, login);
 			ResultSet rs = q.executeQuery();
 
@@ -63,11 +63,14 @@ public class UsuarioWebUsernameGet implements IUsuarioWebUsernameGet {
 
 			// TODO: lançar exceção se não houver nome, cpf e email
 			while (rs2.next()) {
+				resp.interno = rs2.getBoolean("usuinterno");
 				resp.codusu = rs2.getString("codusu");
-				// resp.codunidade = rs2.getString("codunidade");
+				if (resp.interno) 
+					resp.codunidade = rs2.getString("codunidade");
 				resp.nome = rs2.getString("nome");
 				resp.cpf = rs2.getString("cpf");
 				resp.email = rs2.getString("email");
+				resp.perfil = Utils.slugify(rs2.getString("perfil"), true, false);
 				break;
 			}
 		}

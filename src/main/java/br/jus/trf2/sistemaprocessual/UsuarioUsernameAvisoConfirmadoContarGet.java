@@ -5,19 +5,19 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioWebUsernameAvisoConfirmadoContarGet;
+import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameAvisoConfirmadoContarGet;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.QuantidadeConfirmada;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioWebUsernameAvisoConfirmadoContarGetRequest;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioWebUsernameAvisoConfirmadoContarGetResponse;
+import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameAvisoConfirmadoContarGetRequest;
+import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameAvisoConfirmadoContarGetResponse;
 
-public class UsuarioWebUsernameAvisoConfirmadoContarGet implements IUsuarioWebUsernameAvisoConfirmadoContarGet {
+public class UsuarioUsernameAvisoConfirmadoContarGet implements IUsuarioUsernameAvisoConfirmadoContarGet {
 
 	@Override
-	public void run(UsuarioWebUsernameAvisoConfirmadoContarGetRequest req,
-			UsuarioWebUsernameAvisoConfirmadoContarGetResponse resp) throws Exception {
+	public void run(UsuarioUsernameAvisoConfirmadoContarGetRequest req,
+			UsuarioUsernameAvisoConfirmadoContarGetResponse resp) throws Exception {
 		try (Connection conn = Utils.getConnection();
 				PreparedStatement q = conn.prepareStatement(Utils.getSQL("aviso-confirmado-contar-get"))) {
-			String idPessoa = UsuarioWebUsernameGet.getIdPessoaFromUsername(conn, req.username);
+			String idPessoa = UsuarioUsernameGet.getIdPessoaFromUsername(conn, req.username);
 
 			q.setString(1, idPessoa);
 			ResultSet rs = q.executeQuery();

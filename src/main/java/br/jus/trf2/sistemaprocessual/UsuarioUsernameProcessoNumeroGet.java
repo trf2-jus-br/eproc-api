@@ -7,14 +7,14 @@ import java.sql.ResultSet;
 import com.crivano.swaggerservlet.SwaggerServlet;
 import com.crivano.swaggerservlet.SwaggerUtils;
 
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioWebUsernameProcessoNumeroGet;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioWebUsernameProcessoNumeroGetRequest;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioWebUsernameProcessoNumeroGetResponse;
+import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameProcessoNumeroGet;
+import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameProcessoNumeroGetRequest;
+import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameProcessoNumeroGetResponse;
 
-public class UsuarioWebUsernameProcessoNumeroGet implements IUsuarioWebUsernameProcessoNumeroGet {
+public class UsuarioUsernameProcessoNumeroGet implements IUsuarioUsernameProcessoNumeroGet {
 
 	@Override
-	public void run(UsuarioWebUsernameProcessoNumeroGetRequest req, UsuarioWebUsernameProcessoNumeroGetResponse resp)
+	public void run(UsuarioUsernameProcessoNumeroGetRequest req, UsuarioUsernameProcessoNumeroGetResponse resp)
 			throws Exception {
 		try (Connection conn = Utils.getConnection();
 				PreparedStatement q = conn.prepareStatement(Utils.getSQL("processo-validar-numero-get"))) {

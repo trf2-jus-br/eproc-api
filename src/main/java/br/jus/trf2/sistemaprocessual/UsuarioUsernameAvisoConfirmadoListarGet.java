@@ -4,15 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioWebUsernameAvisoConfirmadoListarGet;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioWebUsernameAvisoConfirmadoListarGetRequest;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioWebUsernameAvisoConfirmadoListarGetResponse;
+import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameAvisoConfirmadoListarGet;
+import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameAvisoConfirmadoListarGetRequest;
+import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameAvisoConfirmadoListarGetResponse;
 
-public class UsuarioWebUsernameAvisoConfirmadoListarGet implements IUsuarioWebUsernameAvisoConfirmadoListarGet {
+public class UsuarioUsernameAvisoConfirmadoListarGet implements IUsuarioUsernameAvisoConfirmadoListarGet {
 
 	@Override
-	public void run(UsuarioWebUsernameAvisoConfirmadoListarGetRequest req,
-			UsuarioWebUsernameAvisoConfirmadoListarGetResponse resp) throws Exception {
+	public void run(UsuarioUsernameAvisoConfirmadoListarGetRequest req,
+			UsuarioUsernameAvisoConfirmadoListarGetResponse resp) throws Exception {
 //		try (Connection conn = Utils.getConnection();
 //				PreparedStatement q = conn.prepareStatement(Utils.getSQL("aviso-confirmado-listar-get"))) {
 //			q.setString(1, req.numero);

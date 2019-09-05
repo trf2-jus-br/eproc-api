@@ -93,5 +93,43 @@ public class Utils {
 		DateTime dt = new DateTime(d.getTime());
 		return dt.toString(dtfBR);
 	}
+	
+	public static String removeAcento(String acentuado) {
+		if (acentuado == null)
+			return null;
+		String temp = new String(acentuado);
+		temp = temp.replaceAll("[ÃÂÁÀ]", "A");
+		temp = temp.replaceAll("[ÉÈÊ]", "E");
+		temp = temp.replaceAll("[ÍÌÎ]", "I");
+		temp = temp.replaceAll("[ÕÔÓÒ]", "O");
+		temp = temp.replaceAll("[ÛÚÙÜ]", "U");
+		temp = temp.replaceAll("[Ç]", "C");
+		temp = temp.replaceAll("[ãâáà]", "a");
+		temp = temp.replaceAll("[éèê]", "e");
+		temp = temp.replaceAll("[íìî]", "i");
+		temp = temp.replaceAll("[õôóò]", "o");
+		temp = temp.replaceAll("[ûúùü]", "u");
+		temp = temp.replaceAll("[ç]", "c");
+		return temp;
+	}
+	
+	public static String slugify(String string, boolean lowercase,
+			boolean underscore) {
+		if (string == null)
+			return null;
+		string = string.trim();
+		if (string.length() == 0)
+			return null;
+		string = removeAcento(string);
+		// Apostrophes.
+		string = string.replaceAll("([a-z])'s([^a-z])", "$1s$2");
+		string = string.replaceAll("[^\\w]", "-").replaceAll("-{2,}", "-");
+		// Get rid of any - at the start and end.
+		string.replaceAll("-+$", "").replaceAll("^-+", "");
 
+		if (underscore)
+			string.replaceAll("-", "_");
+
+		return (lowercase ? string.toLowerCase() : string);
+	}
 }
