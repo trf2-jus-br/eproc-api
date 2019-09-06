@@ -65,8 +65,10 @@ public class UsuarioUsernameGet implements IUsuarioUsernameGet {
 			while (rs2.next()) {
 				resp.interno = rs2.getBoolean("usuinterno");
 				resp.codusu = rs2.getString("codusu");
-				if (resp.interno) 
-					resp.codunidade = rs2.getString("codunidade");
+				resp.codentidade = rs2.getString("codentidade");
+				resp.entidade = rs2.getString("entidade");
+				resp.codunidade = rs2.getString("codunidade");
+				resp.unidade = rs2.getString("unidade");
 				resp.nome = rs2.getString("nome");
 				resp.cpf = rs2.getString("cpf");
 				resp.email = rs2.getString("email");
