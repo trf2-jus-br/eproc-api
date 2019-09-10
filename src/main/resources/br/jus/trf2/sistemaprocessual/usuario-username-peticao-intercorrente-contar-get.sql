@@ -1,16 +1,15 @@
-SELECT
-   cast(pe.dth_evento as date) as data,
-   count(pe.id_processo_evento) qtd 
-FROM
-   processo_evento pe 
-   LEFT JOIN
-      processo p 
-      ON (pe.id_processo = p.id_processo ) 
+select 
+cast(ws.dth_inclusao as date) as data_peticao,
+   count(ws.id_ws_protocolo_operacao) qtd_peticoes 
+from  ws_protocolo_operacao ws  	
+inner join processo p
+	on (ws.num_processo=p.num_processo)
 WHERE
-   pe.id_usuario = ? 
-   and pe.id_tipo_peticao_judicial is not null 
-   and datediff(CURRENT_DATE(), pe.dth_evento) <= ? 
+   ws.id_manifestante = ? 
+   and datediff(CURRENT_DATE(), ws.dth_inclusao) <= ? 
+   and ws.sucesso =1 
+  
 group by
-   cast(pe.dth_evento as date) 
+   cast(ws.dth_inclusao as date) 
 order by
-   cast(pe.dth_evento as date) desc
+   cast(ws.dth_inclusao as date) desc;
