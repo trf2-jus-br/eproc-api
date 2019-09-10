@@ -5,20 +5,17 @@ SELECT
    pn.nome_pessoa nome,
    icpf.ident_principal cpf,
    temail.contato email,
-   o.id_orgao codunidade,
-   o.sig_orgao unidade,
-   pessoa_entidade.id_pessoa codentidade,
-   nome_entidade.nome_pessoa entidade,
+   o.id_orgao orgao,
+   pessoa_entidade.id_pessoa entidade,
    tu.sin_usuario_interno = 'S' usuinterno,
    tu.sin_usuario_interno = 'N' usuexterno,
-   per.nome perfil,
+   per.id_perfil perfil,
    pid.ident_principal 
 FROM
    usuario u 
    LEFT JOIN
       pessoa_identificacao pid 
       ON ( u.id_pessoa = pid.id_pessoa 
-      AND u.seq_identificacao = pid.seq_identificacao 
       AND u.sin_ativo = 'S' ) 
    LEFT JOIN
       pessoa pe 
@@ -48,10 +45,13 @@ FROM
       pessoa_contato temail 
       ON ( pe.id_pessoa = temail.id_pessoa 
       AND temail.cod_tipo_contato = 2 
-      AND temail.sin_ativo = 'S' ) 
+      AND temail.sin_ativo = 'S' 
+      AND temail.sin_email_esquecimento_senha = 'S' 	
+) 
    LEFT JOIN
       usuario_procurador_entidade upe 
-      ON ( u.id_usuario = upe.id_usuario_atuante ) 
+      ON ( u.id_usuario = upe.id_usuario_atuante 
+      AND upe.sin_ativo = 'S' ) 
    LEFT JOIN
       entidade e 
       ON ( upe.id_pessoa_entidade = e.id_pessoa ) 
@@ -67,9 +67,12 @@ WHERE
    and u.dth_ultimo_acesso = 
    (
       SELECT
-         MAX(usu.dth_ultimo_acesso) 
+         max(usu.dth_ultimo_acesso) 
       FROM
          usuario usu 
       WHERE
-         usu.id_pessoa = u.id_pessoa
+         usu.id_pessoa = u.id_pessoa 
+      GROUP BY
+         usu.id_pessoa
    )
+   LIMIT 1;
