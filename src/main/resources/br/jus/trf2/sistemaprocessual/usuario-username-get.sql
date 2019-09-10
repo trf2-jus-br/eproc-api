@@ -5,8 +5,10 @@ SELECT
    pn.nome_pessoa nome,
    icpf.ident_principal cpf,
    temail.contato email,
-   o.id_orgao orgao,
-   pessoa_entidade.id_pessoa entidade,
+   o.id_orgao codunidade,
+   o.sig_orgao unidade,
+   pessoa_entidade.id_pessoa codentidade,
+   nome_entidade.nome_pessoa entidade,
    tu.sin_usuario_interno = 'S' usuinterno,
    tu.sin_usuario_interno = 'N' usuexterno,
    per.id_perfil perfil,
@@ -46,8 +48,7 @@ FROM
       ON ( pe.id_pessoa = temail.id_pessoa 
       AND temail.cod_tipo_contato = 2 
       AND temail.sin_ativo = 'S' 
-      AND temail.sin_email_esquecimento_senha = 'S' 	
-) 
+      AND temail.sin_email_esquecimento_senha = 'S' ) 
    LEFT JOIN
       usuario_procurador_entidade upe 
       ON ( u.id_usuario = upe.id_usuario_atuante 
@@ -75,4 +76,4 @@ WHERE
       GROUP BY
          usu.id_pessoa
    )
-   LIMIT 1;
+   LIMIT 1

@@ -73,8 +73,11 @@ public class UsuarioUsernameGet implements IUsuarioUsernameGet {
 				resp.cpf = rs2.getString("cpf");
 				resp.email = rs2.getString("email");
 				resp.perfil = Utils.slugify(rs2.getString("perfil"), true, false);
-				break;
+				return;
 			}
+
+			throw new PresentableException(
+					"Não foi possível localizar informações para o usuário '" + req.username + "'");
 		}
 	}
 
