@@ -36,4 +36,7 @@ public class PeticaoIntercorrenteTiposGet implements IPeticaoIntercorrenteTiposG
 	public String getContext() {
 		return "obter lista de tipos de petição intercorrente";
 	}
+	
+
+	
 }
