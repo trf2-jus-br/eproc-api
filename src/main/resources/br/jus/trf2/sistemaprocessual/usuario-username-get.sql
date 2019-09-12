@@ -11,7 +11,7 @@ SELECT
    nome_entidade.nome_pessoa entidade,
    tu.sin_usuario_interno = 'S' usuinterno,
    tu.sin_usuario_interno = 'N' usuexterno,
-   per.id_perfil perfil,
+   per.nome perfil,
    pid.ident_principal 
 FROM
    usuario u 

@@ -1,6 +1,6 @@
 SELECT
-   CAST(ws.dth_inclusao AS DATE) AS data_peticao,
-   COUNT(ws.id_ws_protocolo_operacao) qtd_peticoes 
+   CAST(ws.dth_inclusao AS DATE) AS data,
+   COUNT(ws.id_ws_protocolo_operacao) qtd 
 FROM
    ws_protocolo_operacao ws 
    INNER JOIN
