@@ -20,7 +20,11 @@ public class PeticaoIntercorrenteTiposGet implements IPeticaoIntercorrenteTiposG
 
 		try (Connection conn = Utils.getConnection();
 				PreparedStatement q = conn.prepareStatement(Utils.getSQL("peticao-intercorrente-tipos-documento-get"))) {
-			// q.setString(1, req.numero);
+
+
+			q.setString(1, req.codusuario);
+			q.setString(2, req.numprocesso);
+
 			ResultSet rs = q.executeQuery();
 
 			while (rs.next()) {
