@@ -1,13 +1,3 @@
---SELECT cod_tipo_documento id, des_tipo_documento nome 
---FROM tipo_documento 
---where sin_ativo = 'S' and (sin_procurador = 'S' or sin_mpf = 'S') 
---order by des_tipo_documento = 'PETIÇÃO' desc, des_tipo_documento;
-
-SET @cod_usuario =? ;
-SET  @num_processo =? ;
---valores para advogado não parte   
--- SET  @cod_usuario = '511527185120153521027281539492';
---  SET  @num_processo = '50038094720194025110';
 SELECT
    tipo_peticao_judicial.id_tipo_peticao_judicial AS id,
    tipo_peticao_judicial.des_peticao AS nome
@@ -56,8 +46,8 @@ FROM
                   processo p 
                   ON (ppp.id_processo_parte = p.id_processo) 
             WHERE
-               u.id_usuario = @cod_usuario 
-               AND p.num_processo = @num_processo 
+               u.id_usuario = ? 
+               AND p.num_processo = ? 
          )
          tabela
    )
@@ -146,7 +136,7 @@ WHERE
          AND tipo_peticao_judicial.sin_peticao_procurador = 'S' 
          AND usu.cod_tipo_usuario = 'P' 
          AND usuario_parte.parte = true 
-      )       # procuradorParte 
+      )       
    )
 ORDER BY
    tipo_peticao_judicial.des_peticao ASC
