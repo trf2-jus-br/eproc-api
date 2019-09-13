@@ -24,7 +24,10 @@ public class UsuarioUsernameProcessoNumeroPeticaoIntercorrenteTiposGet
 						.prepareStatement(Utils.getSQL("peticao-intercorrente-tipos-documento-get"))) {
 
 			q.setString(1, req.username);
-			q.setString(2, req.numero);
+			q.setString(2, req.username);
+			q.setString(3, req.numero);
+			q.setString(4, req.numero);
+			q.setString(5, req.username);
 
 			ResultSet rs = q.executeQuery();
 

@@ -1,5 +1,3 @@
-SET  @cod_usuario = ? ;
-SET  @num_processo = ? ;
 SELECT
    tipo_peticao_judicial.id_tipo_peticao_judicial AS id,
    tipo_peticao_judicial.des_peticao AS nome 
@@ -21,7 +19,7 @@ FROM
                pessoa_identificacao 
             WHERE
                usuario.id_pessoa = pessoa_identificacao.id_pessoa 
-               and pessoa_identificacao.ident_principal = @cod_usuario
+               and pessoa_identificacao.ident_principal = ?
          )
    )
    as usu,
@@ -65,9 +63,9 @@ FROM
                      pessoa_identificacao 
                   WHERE
                      usuario.id_pessoa = pessoa_identificacao.id_pessoa 
-                     and pessoa_identificacao.ident_principal = @cod_usuario
+                     and pessoa_identificacao.ident_principal = ?
                )
-               AND p.num_processo = @num_processo 
+               AND p.num_processo = ?
             UNION
             select
                tabela.id_usuario_procurador as codusuario 
@@ -117,7 +115,7 @@ FROM
                               FROM
                                  processo 
                               WHERE
-                                 num_processo = @num_processo
+                                 num_processo = ?
                            )
                      )
                )
@@ -133,7 +131,7 @@ FROM
                      pessoa_identificacao pi 
                   WHERE
                      pnn.id_pessoa = u.id_pessoa 
-                     and pi.ident_principal = @cod_usuario 
+                     and pi.ident_principal = ?
                      and pi.id_pessoa = pnn.id_pessoa 
                      and pi.sin_ativo = 'S'
                )
