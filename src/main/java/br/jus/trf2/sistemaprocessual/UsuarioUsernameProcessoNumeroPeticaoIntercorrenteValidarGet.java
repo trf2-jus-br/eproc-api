@@ -25,10 +25,12 @@ public class UsuarioUsernameProcessoNumeroPeticaoIntercorrenteValidarGet
 						Utils.getSQL("usuario-username-processo-numero-peticao-intercorrente-ident-encerra-prazos"))) {
 
 			q.setString(1, req.username);
-			q.setString(2, req.username);
-			q.setString(3, req.numero);
+			q.setString(2, req.numero);
+			q.setString(3, req.username);
 			q.setString(4, req.numero);
 			q.setString(5, req.username);
+			q.setString(6, req.numero);
+			q.setString(7, req.username);
 
 			ResultSet rs = q.executeQuery();
 
@@ -41,6 +43,8 @@ public class UsuarioUsernameProcessoNumeroPeticaoIntercorrenteValidarGet
 
 			q2.setString(1, req.numero);
 			q2.setString(2, req.username);
+			q2.setString(3, req.numero);
+			q2.setString(4, req.username);
 
 			ResultSet rs2 = q2.executeQuery();
 
