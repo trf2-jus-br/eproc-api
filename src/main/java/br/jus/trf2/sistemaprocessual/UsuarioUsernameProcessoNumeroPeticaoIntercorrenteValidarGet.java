@@ -27,7 +27,6 @@ public class UsuarioUsernameProcessoNumeroPeticaoIntercorrenteValidarGet
 						Utils.getSQL("usuario-username-processo-numero-peticao-intercorrente-sigilo"))) {
 
 			q.setString(1, req.username);
-			q.setString(2, req.numero);
 
 			ResultSet rs = q.executeQuery();
 

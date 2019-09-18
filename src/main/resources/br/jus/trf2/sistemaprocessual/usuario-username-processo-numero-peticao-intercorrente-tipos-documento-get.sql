@@ -1,284 +1,106 @@
 select
-   tipo_peticao_judicial.id_tipo_peticao_judicial as id,
-   tipo_peticao_judicial.des_peticao as nome 
+   tipo_documento.cod_tipo_documento as id,
+   tipo_documento.des_tipo_documento as nome 
 from
-   tipo_peticao_judicial,
+   tipo_documento,
    (
       select distinct
-         tabela.id_usuario,
-         tabela.cod_tipo_usuario,
-         (
-            if ((tabela2.id_usuario_procurador is not null) 
-            and 
-            (
-               tabela.id_usuario = tabela2.id_usuario_procurador 
-            )
-, true, false) 
-         )
-         as parte_processo 
+         u.id_usuario codusu,
+         per.id_perfil perfil,
+         pid.ident_principal 
       from
-         (
-            select
-               usuario.id_usuario,
-               usuario.cod_tipo_usuario,
-               usuario.id_pessoa,
-               usuario.dth_ultimo_acesso,
-               perfil.id_perfil,
-               s.id_sigilo,
-               pessoa_identificacao.ident_principal 
-            from
-               usuario 
-               left join
-                  tipo_usuario 
-                  on (usuario.cod_tipo_usuario = tipo_usuario.cod_tipo_usuario) 
-               left join
-                  perfil 
-                  on (tipo_usuario.id_perfil_padrao = perfil.id_perfil 
-                  and tipo_usuario.id_sistema_padrao = perfil.id_sistema) 
-               left join
-                  sigilo_perfil sp 
-                  on (perfil.id_perfil = sp.id_perfil) 
-               left join
-                  sigilo s 
-                  on (sp.id_sigilo = s.id_sigilo) 
-               left join
-                  pessoa_identificacao 
-                  on (usuario.id_pessoa = pessoa_identificacao.id_pessoa) 
-            where
-               pessoa_identificacao.ident_principal = ? 
-         )
-         tabela 
+         usuario u 
          left join
-            pessoa_identificacao 
-            on (tabela.ident_principal = pessoa_identificacao.ident_principal) 
+            pessoa_identificacao pid 
+            on ( u.id_pessoa = pid.id_pessoa 
+            and u.sin_ativo = 'S' ) 
          left join
-            usuario 
-            on (pessoa_identificacao.id_pessoa = usuario.id_pessoa 
-            and pessoa_identificacao.seq_identificacao = usuario.seq_identificacao) 
+            pessoa pe 
+            on ( pid.id_pessoa = pe.id_pessoa 
+            and pe.cod_tipo_pessoa = 'PF' ) 
+         inner join
+            pessoa_nome pn 
+            on ( pe.id_pessoa = pn.id_pessoa 
+            and pe.seq_nome = pn.seq_nome_pessoa ) 
          left join
-            (
-               select distinct
-                  ppp.id_usuario_procurador,
-                  p.num_processo,
-                  pp.id_sigilo 
-               from
-                  processo_parte_procurador ppp 
-                  left join
-                     processo_parte pp 
-                     on (ppp.id_processo_parte = pp.id_processo_parte) 
-                  left join
-                     processo p 
-                     on (pp.id_processo = p.id_processo) 
-                  left join
-                     usuario u 
-                     on (ppp.id_usuario_procurador = u.id_usuario) 
-                  left join
-                     pessoa_identificacao pi 
-                     on (u.id_pessoa = pi.id_pessoa ) 
-                  left join
-                     usuario_analista_advogado uaa 
-                     on (ppp.id_usuario_procurador = uaa.id_usuario_advogado 
-                     and uaa.sin_ativo = 'S' ) 
-                  left join
-                     usuario u_asa 
-                     on (uaa.id_usuario_analista = u_asa.id_usuario) 
-                  left join
-                     pessoa_identificacao pi_asa 
-                     on (u_asa.id_pessoa = pi_asa.id_pessoa ) 
-                  left join
-                     usuario_analista_escritorio uae 
-                     on (ppp.id_usuario_procurador = uae.id_usuario_procurador_pessoa_juridica_advogado 
-                     and uae.sin_ativo = 'S') 
-                  left join
-                     usuario u_aea 
-                     on (uae.id_usuario_procurador_pessoa_juridica_analista = u_aea.id_usuario) 
-                  left join
-                     pessoa_identificacao pi_aea 
-                     on (u_aea.id_pessoa = pi_aea.id_pessoa ) 
-               where
-                  p.num_processo = ? 
-            )
-            tabela2 
-            on (usuario.id_usuario = tabela2.id_usuario_procurador) 
+            pessoa_identificacao icpf 
+            on ( pe.id_pessoa = icpf.id_pessoa 
+            and icpf.tipo_identificacao = 'CPF' ) 
+         left join
+            tipo_usuario tu 
+            on ( u.cod_tipo_usuario = tu.cod_tipo_usuario 
+            and tu.sin_ativo = 'S' ) 
+         left join
+            perfil per 
+            on ( tu.id_perfil_padrao = per.id_perfil 
+            and tu.id_sistema_padrao = per.id_sistema 
+            and per.sin_ativo = 'S' ) 
+         left join
+            orgao o 
+            on ( u.id_orgao_lotacao_usuario = o.id_orgao ) 
+         left join
+            pessoa_contato temail 
+            on ( pe.id_pessoa = temail.id_pessoa 
+            and temail.cod_tipo_contato = 2 
+            and temail.sin_ativo = 'S' 
+            and temail.sin_email_esquecimento_senha = 'S' ) 
+         left join
+            usuario_procurador_entidade upe 
+            on ( u.id_usuario = upe.id_usuario_atuante 
+            and upe.sin_ativo = 'S' ) 
+         left join
+            entidade e 
+            on ( upe.id_pessoa_entidade = e.id_pessoa ) 
+         left join
+            pessoa pessoa_entidade 
+            on ( e.id_pessoa = pessoa_entidade.id_pessoa ) 
+         left join
+            pessoa_nome nome_entidade 
+            on ( pessoa_entidade.id_pessoa = nome_entidade.id_pessoa 
+            and pessoa_entidade.seq_nome = nome_entidade.seq_nome_pessoa ) 
       where
-         (
-            if ((tabela2.id_usuario_procurador is not null) 
-            and 
-            (
-               tabela.id_usuario = tabela2.id_usuario_procurador 
-            )
-, true, false) 
-         )
-         = true 
-         or tabela.dth_ultimo_acesso = 
+         pid.ident_principal = ? 
+         and u.dth_ultimo_acesso = 
          (
             select
                max(usu.dth_ultimo_acesso) 
             from
                usuario usu 
             where
-               usu.id_pessoa = tabela.id_pessoa 
+               usu.id_pessoa = u.id_pessoa 
+            group by
+               usu.id_pessoa 
          )
    )
-   as usu 
+   usuario 
 where
-   tipo_peticao_judicial.sin_ativo = 'S' 
-   and tipo_peticao_judicial.sin_lancavel_externo = 'S' 
-   and tipo_peticao_judicial.sin_ativo = 'S' 
+   tipo_documento.sin_ativo = 'S' 
    and 
    (
-( tipo_peticao_judicial.sin_peticao_advogado = 'S' 
-      and tipo_peticao_judicial.id_tipo_peticao_judicial in 
+      tipo_documento.sin_procurador = 'S' 
+      and usuario.perfil in 
       (
-         52,
-         105 
-      )
-      and usu.cod_tipo_usuario = 'A' 
-      and usu.parte_processo = 0 ) 
-      or 
-      (
-         tipo_peticao_judicial.id_tipo_peticao_judicial in 
-         (
-            31,
-            32,
-            180,
-            102,
-            35,
-            36,
-            38,
-            73,
-            170,
-            166,
-            167,
-            177,
-            181,
-            168,
-            169,
-            104,
-            40,
-            41,
-            42,
-            92,
-            43,
-            86,
-            44,
-            101,
-            48,
-            49,
-            51,
-            76,
-            174,
-            165,
-            179,
-            52,
-            72,
-            79,
-            107,
-            108,
-            88,
-            81,
-            82,
-            105,
-            53,
-            95,
-            80,
-            55,
-            61,
-            63,
-            172,
-            171,
-            106,
-            65,
-            178,
-            66,
-            164,
-            163,
-            182,
-            201,
-            207,
-            209,
-            210,
-            211,
-            305,
-            310 
-         )
-         and tipo_peticao_judicial.sin_peticao_advogado = 'S' 
-         and usu.cod_tipo_usuario = 'A' 
-         and usu.parte_processo = 1 
-      )
-      or 
-      (
-         tipo_peticao_judicial.id_tipo_peticao_judicial in 
-         (
-            31,
-            32,
-            180,
-            102,
-            35,
-            36,
-            38,
-            73,
-            170,
-            166,
-            167,
-            177,
-            181,
-            168,
-            169,
-            104,
-            40,
-            41,
-            42,
-            92,
-            43,
-            86,
-            44,
-            101,
-            48,
-            49,
-            51,
-            76,
-            174,
-            165,
-            179,
-            52,
-            72,
-            79,
-            107,
-            108,
-            88,
-            81,
-            82,
-            105,
-            53,
-            95,
-            80,
-            55,
-            61,
-            63,
-            172,
-            171,
-            106,
-            65,
-            178,
-            66,
-            164,
-            163,
-            182,
-            201,
-            207,
-            209,
-            210,
-            211,
-            305 
-         )
-         and tipo_peticao_judicial.sin_peticao_procurador = 'S' 
-         and usu.cod_tipo_usuario = 'P' 
-         and usu.parte_processo = 1 
+         select
+            id_perfil 
+         from
+            perfil 
+         where
+            descricao like '%ADVOGADO%' 
+            or descricao like '%PROCURADOR%' 
       )
    )
-group by
-   id,
-   nome 
+   or 
+   (
+      tipo_documento.sin_pf = 'S' 
+      and perfil in 
+      (
+         select
+            id_perfil 
+         from
+            perfil 
+         where
+            descricao like '%POLÍCIA FEDERAL%' 
+      )
+   )
 order by
-   tipo_peticao_judicial.des_peticao asc
+   tipo_documento.des_tipo_documento
