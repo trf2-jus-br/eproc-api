@@ -22,15 +22,12 @@ public class UsuarioUsernameProcessoNumeroPeticaoIntercorrenteValidarGet
 				PreparedStatement q = conn.prepareStatement(
 						Utils.getSQL("usuario-username-processo-numero-peticao-intercorrente-tipos-documento-get"));
 				PreparedStatement q2 = conn.prepareStatement(
-						Utils.getSQL("usuario-username-processo-numero-peticao-intercorrente-ident-encerra-prazos"))) {
+						Utils.getSQL("usuario-username-processo-numero-peticao-intercorrente-ident-encerra-prazos"));
+				PreparedStatement q3 = conn.prepareStatement(
+						Utils.getSQL("usuario-username-processo-numero-peticao-intercorrente-sigilo"))) {
 
 			q.setString(1, req.username);
 			q.setString(2, req.numero);
-			q.setString(3, req.username);
-			q.setString(4, req.numero);
-			q.setString(5, req.username);
-			q.setString(6, req.numero);
-			q.setString(7, req.username);
 
 			ResultSet rs = q.executeQuery();
 
@@ -51,6 +48,17 @@ public class UsuarioUsernameProcessoNumeroPeticaoIntercorrenteValidarGet
 			while (rs2.next()) {
 				resp.identencerraprazos = rs2.getString("identEncerraPrazos");
 			}
+
+			q3.setString(1, req.username);
+			q3.setString(2, req.numero);
+
+			ResultSet rs3 = q3.executeQuery();
+
+			while (rs3.next()) {
+				resp.sigilo = rs3.getDouble("sigilo");
+				resp.parte = rs3.getBoolean("parte");
+			}
+
 		}
 	}
 

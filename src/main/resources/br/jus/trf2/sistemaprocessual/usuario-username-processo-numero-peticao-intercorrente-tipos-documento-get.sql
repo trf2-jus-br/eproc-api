@@ -1,130 +1,143 @@
-SELECT
-   tipo_peticao_judicial.id_tipo_peticao_judicial AS id,
-   tipo_peticao_judicial.des_peticao AS nome 
-FROM
+select
+   tipo_peticao_judicial.id_tipo_peticao_judicial as id,
+   tipo_peticao_judicial.des_peticao as nome 
+from
    tipo_peticao_judicial,
    (
-      SELECT
-         usu.id_usuario,
-         usu.cod_tipo_usuario 
-      FROM
-         usuario usu 
-      WHERE
-         usu.id_usuario in 
+      select distinct
+         tabela.id_usuario,
+         tabela.cod_tipo_usuario,
          (
-            SELECT
-               id_usuario 
-            FROM
-               usuario,
-               pessoa_identificacao 
-            WHERE
-               usuario.id_pessoa = pessoa_identificacao.id_pessoa 
-               and pessoa_identificacao.ident_principal = ? 
+            if ((tabela2.id_usuario_procurador is not null) 
+            and 
+            (
+               tabela.id_usuario = tabela2.id_usuario_procurador 
+            )
+, true, false) 
+         )
+         as parte_processo 
+      from
+         (
+            select
+               usuario.id_usuario,
+               usuario.cod_tipo_usuario,
+               usuario.id_pessoa,
+               usuario.dth_ultimo_acesso,
+               perfil.id_perfil,
+               s.id_sigilo,
+               pessoa_identificacao.ident_principal 
+            from
+               usuario 
+               left join
+                  tipo_usuario 
+                  on (usuario.cod_tipo_usuario = tipo_usuario.cod_tipo_usuario) 
+               left join
+                  perfil 
+                  on (tipo_usuario.id_perfil_padrao = perfil.id_perfil 
+                  and tipo_usuario.id_sistema_padrao = perfil.id_sistema) 
+               left join
+                  sigilo_perfil sp 
+                  on (perfil.id_perfil = sp.id_perfil) 
+               left join
+                  sigilo s 
+                  on (sp.id_sigilo = s.id_sigilo) 
+               left join
+                  pessoa_identificacao 
+                  on (usuario.id_pessoa = pessoa_identificacao.id_pessoa) 
+            where
+               pessoa_identificacao.ident_principal = ? 
+         )
+         tabela 
+         left join
+            pessoa_identificacao 
+            on (tabela.ident_principal = pessoa_identificacao.ident_principal) 
+         left join
+            usuario 
+            on (pessoa_identificacao.id_pessoa = usuario.id_pessoa 
+            and pessoa_identificacao.seq_identificacao = usuario.seq_identificacao) 
+         left join
+            (
+               select distinct
+                  ppp.id_usuario_procurador,
+                  p.num_processo,
+                  pp.id_sigilo 
+               from
+                  processo_parte_procurador ppp 
+                  left join
+                     processo_parte pp 
+                     on (ppp.id_processo_parte = pp.id_processo_parte) 
+                  left join
+                     processo p 
+                     on (pp.id_processo = p.id_processo) 
+                  left join
+                     usuario u 
+                     on (ppp.id_usuario_procurador = u.id_usuario) 
+                  left join
+                     pessoa_identificacao pi 
+                     on (u.id_pessoa = pi.id_pessoa ) 
+                  left join
+                     usuario_analista_advogado uaa 
+                     on (ppp.id_usuario_procurador = uaa.id_usuario_advogado 
+                     and uaa.sin_ativo = 'S' ) 
+                  left join
+                     usuario u_asa 
+                     on (uaa.id_usuario_analista = u_asa.id_usuario) 
+                  left join
+                     pessoa_identificacao pi_asa 
+                     on (u_asa.id_pessoa = pi_asa.id_pessoa ) 
+                  left join
+                     usuario_analista_escritorio uae 
+                     on (ppp.id_usuario_procurador = uae.id_usuario_procurador_pessoa_juridica_advogado 
+                     and uae.sin_ativo = 'S') 
+                  left join
+                     usuario u_aea 
+                     on (uae.id_usuario_procurador_pessoa_juridica_analista = u_aea.id_usuario) 
+                  left join
+                     pessoa_identificacao pi_aea 
+                     on (u_aea.id_pessoa = pi_aea.id_pessoa ) 
+               where
+                  p.num_processo = ? 
+            )
+            tabela2 
+            on (usuario.id_usuario = tabela2.id_usuario_procurador) 
+      where
+         (
+            if ((tabela2.id_usuario_procurador is not null) 
+            and 
+            (
+               tabela.id_usuario = tabela2.id_usuario_procurador 
+            )
+, true, false) 
+         )
+         = true 
+         or tabela.dth_ultimo_acesso = 
+         (
+            select
+               max(usu.dth_ultimo_acesso) 
+            from
+               usuario usu 
+            where
+               usu.id_pessoa = tabela.id_pessoa 
          )
    )
-   as usu,
-   (
-      SELECT
-         COUNT(*) > 0 parte 
-      FROM
-         (
-            
-            SELECT
-               ppp.id_usuario_procurador as procurador_advogado,
-               pi.ident_principal as login,
-               p.num_processo as processo 
-            FROM
-               processo_parte_procurador ppp 
-               left join
-                  processo_parte pp 
-                  on (ppp.id_processo_parte = pp.id_processo_parte) 
-               left join
-                  processo p 
-                  on (pp.id_processo = p.id_processo) 
-               inner join
-                  usuario u 
-                  on (ppp.id_usuario_procurador = u.id_usuario) 
-               left join
-                  pessoa_identificacao pi 
-                  on (u.id_pessoa = pi.id_pessoa ) 
-            where
-               p.num_processo = ? 
-               and pi.ident_principal = ? 
-            union
-            SELECT
-               ppp.id_usuario_procurador as procurador_advogado,
-               pi_asa.ident_principal as login,
-               p.num_processo as processo 
-            FROM
-               processo_parte_procurador ppp 
-               left join
-                  processo_parte pp 
-                  on (ppp.id_processo_parte = pp.id_processo_parte) 
-               left join
-                  processo p 
-                  on (pp.id_processo = p.id_processo) 
-               inner join
-                  usuario_analista_advogado uaa 
-                  on (ppp.id_usuario_procurador = uaa.id_usuario_advogado 
-                  and uaa.sin_ativo = 'S' ) 
-               left join
-                  usuario u_asa 
-                  on (uaa.id_usuario_analista = u_asa.id_usuario) 
-               left join
-                  pessoa_identificacao pi_asa 
-                  on (u_asa.id_pessoa = pi_asa.id_pessoa ) 
-            where
-               p.num_processo = ? 
-               and pi_asa.ident_principal = ? 
-            union
-           
-            SELECT
-               ppp.id_usuario_procurador as procurador_advogado,
-               pi_aea.ident_principal as login,
-               p.num_processo as processo 
-            FROM
-               processo_parte_procurador ppp 
-               left join
-                  processo_parte pp 
-                  on (ppp.id_processo_parte = pp.id_processo_parte) 
-               left join
-                  processo p 
-                  on (pp.id_processo = p.id_processo) 
-               inner join
-                  usuario_analista_escritorio uae 
-                  on (ppp.id_usuario_procurador = uae.id_usuario_procurador_pessoa_juridica_advogado 
-                  and uae.sin_ativo = 'S') 
-               left join
-                  usuario u_aea 
-                  on (uae.id_usuario_procurador_pessoa_juridica_analista = u_aea.id_usuario) 
-               left join
-                  pessoa_identificacao pi_aea 
-                  on (u_aea.id_pessoa = pi_aea.id_pessoa ) 
-            WHERE
-               p.num_processo = ? 
-               and pi_aea.ident_principal = ? 
-         )
-         AS tabela 
-   )
-   AS usuario_parte 
-WHERE
+   as usu 
+where
    tipo_peticao_judicial.sin_ativo = 'S' 
-   AND tipo_peticao_judicial.des_peticao LIKE '%%' 
-   AND tipo_peticao_judicial.sin_lancavel_externo = 'S' 
-   AND tipo_peticao_judicial.sin_ativo = 'S' 
-   AND 
+   and tipo_peticao_judicial.sin_lancavel_externo = 'S' 
+   and tipo_peticao_judicial.sin_ativo = 'S' 
+   and 
    (
 ( tipo_peticao_judicial.sin_peticao_advogado = 'S' 
-      AND tipo_peticao_judicial.id_tipo_peticao_judicial IN 
+      and tipo_peticao_judicial.id_tipo_peticao_judicial in 
       (
          52,
          105 
       )
-      AND usu.cod_tipo_usuario = 'A' 
-      AND usuario_parte.parte = 0 ) 
-      OR 
+      and usu.cod_tipo_usuario = 'A' 
+      and usu.parte_processo = 0 ) 
+      or 
       (
-         tipo_peticao_judicial.id_tipo_peticao_judicial IN 
+         tipo_peticao_judicial.id_tipo_peticao_judicial in 
          (
             31,
             32,
@@ -189,13 +202,13 @@ WHERE
             305,
             310 
          )
-         AND tipo_peticao_judicial.sin_peticao_advogado = 'S' 
-         AND usu.cod_tipo_usuario = 'A' 
-         AND usuario_parte.parte = 1 
+         and tipo_peticao_judicial.sin_peticao_advogado = 'S' 
+         and usu.cod_tipo_usuario = 'A' 
+         and usu.parte_processo = 1 
       )
-      OR 
+      or 
       (
-         tipo_peticao_judicial.id_tipo_peticao_judicial IN 
+         tipo_peticao_judicial.id_tipo_peticao_judicial in 
          (
             31,
             32,
@@ -259,13 +272,13 @@ WHERE
             211,
             305 
          )
-         AND tipo_peticao_judicial.sin_peticao_procurador = 'S' 
-         AND usu.cod_tipo_usuario = 'P' 
-         AND usuario_parte.parte = 1 
+         and tipo_peticao_judicial.sin_peticao_procurador = 'S' 
+         and usu.cod_tipo_usuario = 'P' 
+         and usu.parte_processo = 1 
       )
    )
-GROUP BY
+group by
    id,
    nome 
-ORDER BY
-   tipo_peticao_judicial.des_peticao ASC
+order by
+   tipo_peticao_judicial.des_peticao asc
