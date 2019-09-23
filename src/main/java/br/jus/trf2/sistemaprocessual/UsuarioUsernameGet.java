@@ -50,7 +50,7 @@ public class UsuarioUsernameGet implements IUsuarioUsernameGet {
 			}
 
 			if (hash == null)
-				throw new PresentableException("Usuário não encontrado");
+				throw new PresentableUnloggedException("Usuário não encontrado");
 
 			String senha = Utils.asHex(Utils.calcSha256(password.getBytes(StandardCharsets.UTF_8)));
 			String hashDeTeste = BCrypt.hashpw(senha, hash);
