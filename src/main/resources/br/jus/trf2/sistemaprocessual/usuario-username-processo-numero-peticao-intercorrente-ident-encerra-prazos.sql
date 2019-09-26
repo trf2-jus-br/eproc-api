@@ -54,7 +54,7 @@ select distinct
                      from
                         pessoa_identificacao pi 
                      where
-                        pi.ident_principal = ? 
+                        pi.ident_principal = ? and pi.sin_ativo='S'
                   )
             )
             and e.sin_ativo = 'S' 
@@ -100,7 +100,7 @@ select distinct
                      where
                         h.num_processo = ?
                   )
-                  and pi.ident_principal = ?
+                  and pi.ident_principal = ? and ppp.sin_ativo='S'
             )
       )
       and pii.sin_ativo = 'S' 
