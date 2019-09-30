@@ -18,6 +18,9 @@ public class EprocServlet extends SwaggerServlet {
 		setAPI(ISistemaProcessual.class);
 
 		setActionPackage("br.jus.trf2.sistemaprocessual");
+		
+		addPrivateProperty("password", null);
+		super.setAuthorization(getProperty("password"));
 
 		addPublicProperty("orgao.sigla");
 		

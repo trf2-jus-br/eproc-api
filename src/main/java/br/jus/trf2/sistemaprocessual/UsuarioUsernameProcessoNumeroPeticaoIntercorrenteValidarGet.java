@@ -38,16 +38,20 @@ public class UsuarioUsernameProcessoNumeroPeticaoIntercorrenteValidarGet
 				resp.tipos.add(in);
 			}
 
-			q2.setString(1, req.numero);
+			q2.setString(1, req.username);
 			q2.setString(2, req.username);
 			q2.setString(3, req.numero);
-			q2.setString(4, req.username);
 
 			ResultSet rs2 = q2.executeQuery();
 
+			StringBuilder sb = new StringBuilder();
 			while (rs2.next()) {
-				resp.identencerraprazos = rs2.getString("identEncerraPrazos");
+				if (sb.length() > 0)
+					sb.append(",");
+				sb.append(rs2.getString("identEncerraPrazos"));
 			}
+			if (sb.length() > 0)
+				resp.identencerraprazos = sb.toString();
 
 			q3.setString(1, req.username);
 			q3.setString(2, req.numero);
