@@ -76,5 +76,5 @@ WHERE
       GROUP BY
          usu.id_pessoa
    )
-   and (select 1 from v_usuario usua where ident_principal=pid.ident_principal and sin_ativo='S')=1
+   and exists(select 1 from v_usuario usua where ident_principal=pid.ident_principal and sin_ativo='S')
    LIMIT 1
