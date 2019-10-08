@@ -4,8 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameLocalIdMesaId2DocumentosGet;
+import br.jus.trf2.sistemaprocessual.ISistemaProcessual.Lembrete;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.MesaDocumento;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameLocalIdMesaId2DocumentosGetRequest;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameLocalIdMesaId2DocumentosGetResponse;
@@ -15,27 +17,41 @@ public class UsuarioUsernameLocalIdMesaId2DocumentosGet implements IUsuarioUsern
 	@Override
 	public void run(UsuarioUsernameLocalIdMesaId2DocumentosGetRequest req,
 			UsuarioUsernameLocalIdMesaId2DocumentosGetResponse resp) throws Exception {
-		String[] list = req.ids.split(",");
-		char[] markers = new char[list.length * 2 - 1];
-		for (int i = 0; i < markers.length; i++)
-			markers[i] = ((i & 1) == 0 ? '?' : ',');
-
-		String statement = Utils.getSQL("usuario-username-mesa-complemento");
-		statement = statement.replace(":list", new String(markers));
-		try (Connection conn = Utils.getConnection(); PreparedStatement q = conn.prepareStatement(statement)) {
+		try (Connection conn = Utils.getConnection();
+				PreparedStatement q = conn.prepareStatement(Utils.getSQL("usuario-username-minutas"))) {
 			q.setString(1, req.username);
-			int i = 2;
-			for (String s : list)
-				q.setString(i++, s);
 			ResultSet rs = q.executeQuery();
 
 			resp.list = new ArrayList<>();
+			String lastId = null;
+			MesaDocumento d = null;
 			while (rs.next()) {
-				MesaDocumento d = new MesaDocumento();
-				d.id = rs.getString("id");
-				d.numerodoprocesso = rs.getString("numero");
-				d.conteudo = rs.getString("conteudo");
-				resp.list.add(d);
+				if (!rs.getString("minuta_id").equals(lastId)) {
+					d = new MesaDocumento();
+					d.dataDeInclusao = rs.getDate("minuta_inclusao");
+					d.id = rs.getString("minuta_id");
+					d.numeroDoProcesso = rs.getString("processo_numero");
+					d.numeroDoDocumento = rs.getString("documento_cod");
+					d.descricao = rs.getString("minuta_descricao");
+					d.status = rs.getString("minuta_status");
+					d.descricaoDoStatus = rs.getString("minuta_status_descr");
+					d.tipoDoDocumento = rs.getString("documento_tipo");
+					d.identificadorDoUsuarioQueIncluiu = rs.getString("usuario_inclusao_ident");
+					d.nomeDoUsuarioQueIncluiu = rs.getString("usuario_inclusao_nome");
+					d.conteudo = rs.getString("minuta_conteudo");
+					resp.list.add(d);
+				}
+				if (rs.getString("lembrete_conteudo") != null) {
+					Lembrete lembrete = new Lembrete();
+					lembrete.id = rs.getString("lembrete_id");
+					lembrete.dataDeInclusao = rs.getDate("lembrete_inclusao");
+					lembrete.conteudo = rs.getString("lembrete_conteudo");
+					lembrete.identificadorDoUsuario = rs.getString("lembrete_usuario");
+					lembrete.nomeDoUsuario = rs.getString("lembrete_nome");
+					if (d.lembretes == null)
+						d.lembretes = new ArrayList<>();
+					d.lembretes.add(lembrete);
+				}
 			}
 		}
 	}
