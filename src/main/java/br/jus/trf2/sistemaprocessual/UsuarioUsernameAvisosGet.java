@@ -25,11 +25,9 @@ public class UsuarioUsernameAvisosGet implements IUsuarioUsernameAvisosGet {
 			while (rs.next()) {
 				Aviso i = new Aviso();
 				i.processo = rs.getString("numprocesso");
-				i.idAviso = rs.getString("idaviso");
-				i.dataAviso = rs.getDate("data_evento");
-				if (i.dataAviso == null)
-					i.dataAviso = rs.getDate("data_sessao");
-				i.tipo = rs.getString("tipo");
+				// i.idAviso = rs.getString("idaviso");
+				i.dataAviso = rs.getTimestamp("data_evento");
+				// i.tipo = rs.getString("tipo");
 				i.unidade = rs.getString("unidade");
 				i.unidadeNome = null;
 				i.unidadeTipo = null;
@@ -42,7 +40,7 @@ public class UsuarioUsernameAvisosGet implements IUsuarioUsernameAvisosGet {
 				i.numeroPrazo = rs.getString("prazo");
 				i.tipoPrazo = null;
 				i.multiplicadorPrazo = null;
-				i.dataLimiteIntimacaoAutomatica = rs.getDate("datalimiteintauto");
+				i.dataLimiteIntimacaoAutomatica = rs.getTimestamp("datalimiteintauto");
 				i.assunto = rs.getString("assunto");
 
 				resp.list.add(i);

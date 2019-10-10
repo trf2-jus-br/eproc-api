@@ -98,4 +98,4 @@ from
    infra_parametro ip 
 where
    ip.nome = 'EPROC_TIPO_ESTRUTURA_ORGAO' 
-   and p.num_processo = ?
+   and p.num_processo in (:list)
