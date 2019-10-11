@@ -8,6 +8,7 @@ import java.sql.SQLException;
 
 import org.mindrot.jbcrypt.BCrypt;
 
+import com.crivano.swaggerservlet.ISwaggerPublicMethod;
 import com.crivano.swaggerservlet.PresentableException;
 import com.crivano.swaggerservlet.PresentableUnloggedException;
 import com.crivano.swaggerservlet.SwaggerServlet;
@@ -17,7 +18,7 @@ import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameGet;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameGetRequest;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameGetResponse;
 
-public class UsuarioUsernameGet implements IUsuarioUsernameGet {
+public class UsuarioUsernameGet implements IUsuarioUsernameGet, ISwaggerPublicMethod {
 
 	@Override
 	public void run(UsuarioUsernameGetRequest req, UsuarioUsernameGetResponse resp) throws Exception {
@@ -76,7 +77,7 @@ public class UsuarioUsernameGet implements IUsuarioUsernameGet {
 				return;
 			}
 
-			throw new PresentableException(
+			throw new PresentableUnloggedException(
 					"Não foi possível localizar informações para o usuário '" + req.username + "'");
 		}
 	}
