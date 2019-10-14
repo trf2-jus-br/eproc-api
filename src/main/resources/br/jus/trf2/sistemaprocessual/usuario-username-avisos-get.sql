@@ -34,7 +34,7 @@ from
    inner join
       processo_parte_procurador 
       on prazo_processo.id_processo_parte = processo_parte_procurador.id_processo_parte 
-      and processo_parte_procurador.id_usuario_procurador = 
+      and processo_parte_procurador.id_usuario_procurador in 
       (
          select
             id_usuario 
@@ -74,6 +74,7 @@ where
    and (processo.id_sigilo = 0 
    or processo.id_sigilo IS NULL 
    or sf_verificaAcesso(trim(processo.num_processo), processo_parte_procurador.id_usuario_procurador) = 0)
+   and ADDDATE(pe.dth_evento, INTERVAL 10 DAY) > NOW()
 order by
    pe.dth_evento asc,
    processo.num_processo asc
