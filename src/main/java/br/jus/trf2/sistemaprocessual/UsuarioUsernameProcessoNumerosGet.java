@@ -29,6 +29,7 @@ public class UsuarioUsernameProcessoNumerosGet implements IUsuarioUsernameProces
             int i = 1;
             for (String s : list)
                 q.setString(i++, s);
+            q.setString(i, req.username);
             ResultSet rs = q.executeQuery();
 
 			resp.list = new ArrayList<>();

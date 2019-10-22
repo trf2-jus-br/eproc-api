@@ -12,7 +12,7 @@ select
    unidade,
    (
       select
-         GROUP_CONCAT(l.des_localizador) 
+         group_concat(l.des_localizador) 
       from
          processo_localizador pl,
          localizador_orgao lo,
@@ -28,7 +28,7 @@ select
    p.id_sigilo > 0 segredodejustica,
    p.id_sigilo >= 3 segredodejusticadesistema,
    p.id_sigilo >= 4 segredodejusticaabsoluto,
-   exists
+   exists 
    (
       select
          * 
@@ -50,7 +50,7 @@ select
          (
             75,
             70,
-            50
+            50 
          )
       )
    )
@@ -70,7 +70,7 @@ select
                009666,
                009388,
                009445,
-               009333
+               009333 
             )
       )
    )
@@ -98,4 +98,23 @@ from
    infra_parametro ip 
 where
    ip.nome = 'EPROC_TIPO_ESTRUTURA_ORGAO' 
-   and p.num_processo in (:list)
+   and p.num_processo in 
+   (
+      :list
+   )
+   and 
+   (
+      p.id_sigilo = 0 
+      or id_sigilo is null 
+      or exists
+      (
+         select
+            1 
+         from
+            v_usuario u 
+         where
+            u.ident_principal = ? 
+            and u.sin_ativo = 'S' 
+            and sf_verificaacesso(p.num_processo, u.id_usuario) = 0
+      )
+   )
