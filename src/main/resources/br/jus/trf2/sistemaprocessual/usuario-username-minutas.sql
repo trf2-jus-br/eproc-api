@@ -69,15 +69,7 @@ from
       on pl.id_pessoa = pnl.id_pessoa 
       and pl.seq_nome = pnl.seq_nome_pessoa 
 where
-   m.cod_status_minuta in 
-   (
-      1,
-      2,
-      3,
-      4,
-      5,
-      7
-   )
+   m.cod_status_minuta in (4)
 order by
    m.dth_inclusao,
    m.id_minuta;
