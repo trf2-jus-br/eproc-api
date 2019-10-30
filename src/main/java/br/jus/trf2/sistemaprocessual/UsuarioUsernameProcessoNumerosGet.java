@@ -56,6 +56,8 @@ public class UsuarioUsernameProcessoNumerosGet implements IUsuarioUsernameProces
 				p.perdecompetencia = rs.getBoolean("perdecompetencia");
 				p.cdas = rs.getString("cdas");
 				p.dataultimomovimento = Utils.formatarDataHoraMinuto(rs.getTimestamp("dataultimomovimento"));
+				p.autor = rs.getString("autor");
+				p.reu = rs.getString("reu");
 				resp.list.add(p);
 			}
 		}

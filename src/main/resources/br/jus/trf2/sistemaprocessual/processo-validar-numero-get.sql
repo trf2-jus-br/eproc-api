@@ -92,21 +92,82 @@ select
       where
          pe.id_processo = p.id_processo 
    )
-   dataultimomovimento 
+   dataultimomovimento,
+   (
+      select
+         concat(pn.nome_pessoa, 
+         case
+            when
+               count(*) > 1 
+            then
+               concat(" +", count(*) - 1) 
+            else
+               "" 
+         end
+) 
+      from
+         processo_parte pp 
+         inner join
+            tipo_parte tp 
+            on tp.cod_tipo_parte = pp.cod_tipo_parte 
+            and tp.sin_polo = 'A' 
+         inner join
+            pessoa pe 
+            on pe.id_pessoa = pp.id_pessoa 
+         inner join
+            pessoa_nome pn 
+            on pn.id_pessoa = pe.id_pessoa 
+            and pn.seq_nome_pessoa = pe.seq_nome 
+      where
+         pp.id_processo = p.id_processo 
+         and pp.sin_ativo = 'S' 
+      order by
+         pp.sin_parte_principal = 'S' limit 1 
+   )
+   as autor, 
+   (
+      select
+         concat(max(pn.nome_pessoa), 
+         case
+            when
+               count(*) > 1 
+            then
+               concat(" +", count(*) - 1) 
+            else
+               "" 
+         end
+) 
+      from
+         processo_parte pp 
+         inner join
+            tipo_parte tp 
+            on tp.cod_tipo_parte = pp.cod_tipo_parte 
+            and tp.sin_polo = 'R' 
+         inner join
+            pessoa pe 
+            on pe.id_pessoa = pp.id_pessoa 
+         inner join
+            pessoa_nome pn 
+            on pn.id_pessoa = pe.id_pessoa 
+            and pn.seq_nome_pessoa = pe.seq_nome 
+      where
+         pp.id_processo = p.id_processo 
+         and pp.sin_ativo = 'S' 
+   )
+   as reu 
 from
-   processo p,
-   infra_parametro ip 
+   processo p, infra_parametro ip 
 where
    ip.nome = 'EPROC_TIPO_ESTRUTURA_ORGAO' 
    and p.num_processo in 
    (
-      :list
+      :list 
    )
    and 
    (
       p.id_sigilo = 0 
       or id_sigilo is null 
-      or exists
+      or exists 
       (
          select
             1 
@@ -115,6 +176,6 @@ where
          where
             u.ident_principal = ? 
             and u.sin_ativo = 'S' 
-            and sf_verificaacesso(p.num_processo, u.id_usuario) = 0
+            and sf_verificaacesso(p.num_processo, u.id_usuario) = 0 
       )
    )

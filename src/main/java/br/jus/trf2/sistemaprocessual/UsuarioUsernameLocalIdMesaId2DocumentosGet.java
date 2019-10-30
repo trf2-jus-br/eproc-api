@@ -31,6 +31,8 @@ public class UsuarioUsernameLocalIdMesaId2DocumentosGet implements IUsuarioUsern
 					d.dataDeInclusao = rs.getDate("minuta_inclusao");
 					d.id = rs.getString("minuta_id");
 					d.numeroDoProcesso = rs.getString("processo_numero");
+					d.autor = rs.getString("processo_autor");
+					d.reu = rs.getString("processo_reu");
 					d.numeroDoDocumento = rs.getString("documento_cod");
 					d.descricao = rs.getString("minuta_descricao");
 					d.status = rs.getString("minuta_status");

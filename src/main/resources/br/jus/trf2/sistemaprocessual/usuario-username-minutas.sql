@@ -6,6 +6,68 @@ select
    m.cod_status_minuta minuta_status,
    sm.des_status_minuta minuta_status_descr,
    p.num_processo processo_numero,
+   (
+      select
+         concat(pn.nome_pessoa, 
+         case
+            when
+               count(*) > 1 
+            then
+               concat(" +", count(*) - 1) 
+            else
+               "" 
+         end
+) 
+      from
+         processo_parte pp 
+         inner join
+            tipo_parte tp 
+            on tp.cod_tipo_parte = pp.cod_tipo_parte 
+            and tp.sin_polo = 'A' 
+         inner join
+            pessoa pe 
+            on pe.id_pessoa = pp.id_pessoa 
+         inner join
+            pessoa_nome pn 
+            on pn.id_pessoa = pe.id_pessoa 
+            and pn.seq_nome_pessoa = pe.seq_nome 
+      where
+         pp.id_processo = p.id_processo 
+         and pp.sin_ativo = 'S' 
+      order by
+         pp.sin_parte_principal = 'S' limit 1 
+   )
+   as processo_autor, 
+   (
+      select
+         concat(max(pn.nome_pessoa), 
+         case
+            when
+               count(*) > 1 
+            then
+               concat(" +", count(*) - 1) 
+            else
+               "" 
+         end
+) 
+      from
+         processo_parte pp 
+         inner join
+            tipo_parte tp 
+            on tp.cod_tipo_parte = pp.cod_tipo_parte 
+            and tp.sin_polo = 'R' 
+         inner join
+            pessoa pe 
+            on pe.id_pessoa = pp.id_pessoa 
+         inner join
+            pessoa_nome pn 
+            on pn.id_pessoa = pe.id_pessoa 
+            and pn.seq_nome_pessoa = pe.seq_nome 
+      where
+         pp.id_processo = p.id_processo 
+         and pp.sin_ativo = 'S' 
+   )
+   as processo_reu,   
    td.des_tipo_documento documento_tipo,
    v.conteudo as minuta_conteudo,
    ui.ident_principal usuario_inclusao_ident,
@@ -14,7 +76,7 @@ select
    ml.id_minuta_lembrete lembrete_id,
    ml.lembrete lembrete_conteudo,
    ul.ident_principal lembrete_usuario,
-   pnl.nome_pessoa lembrete_nome 
+   pnl.nome_pessoa lembrete_nome
 from
    minuta m 
    inner join
