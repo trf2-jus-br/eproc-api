@@ -1,5 +1,7 @@
-select
+SELECT
+   u.ident_principal AS juiz,
    m.dth_inclusao minuta_inclusao,
+   m.id_documento,
    m.id_minuta minuta_id,
    m.cod_documento documento_cod,
    m.descricao_minuta minuta_descricao,
@@ -49,7 +51,7 @@ select
             else
                "" 
          end
-) 
+  ) 
       from
          processo_parte pp 
          inner join
@@ -76,9 +78,12 @@ select
    ml.id_minuta_lembrete lembrete_id,
    ml.lembrete lembrete_conteudo,
    ul.ident_principal lembrete_usuario,
-   pnl.nome_pessoa lembrete_nome
+   pnl.nome_pessoa lembrete_nome,
+   minuta_bloqueio.id_usuario_bloqueio idusuariobloqueio 
 from
    minuta m 
+   LEFT JOIN minuta_bloqueio
+   ON m.id_minuta = minuta_bloqueio.id_minuta
    inner join
       versao_conteudo v 
       on v.id_versao_conteudo = m.id_versao_conteudo_ultima 
@@ -100,7 +105,7 @@ from
    inner join
       v_usuario u 
       on m.id_usuario_assinante_indicado = u.id_usuario 
-      and ident_principal = ?
+      and ident_principal like 'jrj16025'
       and u.cod_tipo_usuario = 'M' 
       and u.sin_ativo = 'S' 
    inner join
@@ -132,6 +137,8 @@ from
       and pl.seq_nome = pnl.seq_nome_pessoa 
 where
    m.cod_status_minuta in (4)
+   and minuta_bloqueio.id_usuario_bloqueio IS NULL 
 order by
+   u.ident_principal,
    m.dth_inclusao,
-   m.id_minuta;
+   m.id_minuta
