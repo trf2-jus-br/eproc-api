@@ -136,9 +136,9 @@ from
       on pl.id_pessoa = pnl.id_pessoa 
       and pl.seq_nome = pnl.seq_nome_pessoa 
 where
-   m.cod_status_minuta in (4)
+   m.cod_status_minuta in (2, 4)
    and minuta_bloqueio.id_usuario_bloqueio IS NULL 
 order by
    u.ident_principal,
-   m.dth_inclusao,
+   m.dth_inclusao desc,
    m.id_minuta

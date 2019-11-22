@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import br.jus.trf2.sistemaprocessual.ISistemaProcessual.AvisoPeticaoIntercorrente;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameProcessoNumeroPeticaoIntercorrenteValidarGet;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.TipoPeticaoIntercorrente;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameProcessoNumeroPeticaoIntercorrenteValidarGetRequest;
@@ -17,6 +18,7 @@ public class UsuarioUsernameProcessoNumeroPeticaoIntercorrenteValidarGet
 	public void run(UsuarioUsernameProcessoNumeroPeticaoIntercorrenteValidarGetRequest req,
 			UsuarioUsernameProcessoNumeroPeticaoIntercorrenteValidarGetResponse resp) throws Exception {
 		resp.tipos = new ArrayList<>();
+		resp.avisos = new ArrayList<>();
 
 		try (Connection conn = Utils.getConnection();
 				PreparedStatement q = conn.prepareStatement(
@@ -24,7 +26,9 @@ public class UsuarioUsernameProcessoNumeroPeticaoIntercorrenteValidarGet
 				PreparedStatement q2 = conn.prepareStatement(
 						Utils.getSQL("usuario-username-processo-numero-peticao-intercorrente-ident-encerra-prazos"));
 				PreparedStatement q3 = conn.prepareStatement(
-						Utils.getSQL("usuario-username-processo-numero-peticao-intercorrente-sigilo"))) {
+						Utils.getSQL("usuario-username-processo-numero-peticao-intercorrente-sigilo"));
+				PreparedStatement q4 = conn.prepareStatement(
+						Utils.getSQL("usuario-username-processo-numero-peticao-intercorrente-avisos-get"))) {
 
 			q.setString(1, req.username);
 			q.setString(2, req.numero);
@@ -61,6 +65,19 @@ public class UsuarioUsernameProcessoNumeroPeticaoIntercorrenteValidarGet
 			while (rs3.next()) {
 				resp.sigilo = rs3.getDouble("sigilo");
 				resp.parte = rs3.getBoolean("parte");
+			}
+
+			q4.setString(1, req.numero);
+			q4.setString(2, req.username);
+
+			ResultSet rs4 = q4.executeQuery();
+
+			while (rs4.next()) {
+				AvisoPeticaoIntercorrente in = new AvisoPeticaoIntercorrente();
+				in.id = rs4.getString("id");
+				in.evento = rs4.getString("evento");
+				in.data = rs4.getTimestamp("data");
+				resp.avisos.add(in);
 			}
 
 		}
