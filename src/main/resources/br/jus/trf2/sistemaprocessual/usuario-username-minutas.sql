@@ -1,5 +1,6 @@
 SELECT
    u.ident_principal AS juiz,
+   u.sig_orgao_lotacao AS unidade_sigla,
    m.dth_inclusao minuta_inclusao,
    m.id_documento,
    m.id_minuta minuta_id,
@@ -136,8 +137,9 @@ from
       on pl.id_pessoa = pnl.id_pessoa 
       and pl.seq_nome = pnl.seq_nome_pessoa 
 where
-   m.cod_status_minuta in (2, 4)
-   and minuta_bloqueio.id_usuario_bloqueio IS NULL 
+   m.cod_status_minuta in (2, 4)   
+  and
+	 minuta_bloqueio.id_usuario_bloqueio IS NULL 
 order by
    u.ident_principal,
    m.dth_inclusao desc,

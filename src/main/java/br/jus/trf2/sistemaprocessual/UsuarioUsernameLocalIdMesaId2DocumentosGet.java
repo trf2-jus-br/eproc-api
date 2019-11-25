@@ -40,6 +40,7 @@ public class UsuarioUsernameLocalIdMesaId2DocumentosGet implements IUsuarioUsern
 					d.tipoDoDocumento = rs.getString("documento_tipo");
 					d.identificadorDoUsuarioQueIncluiu = rs.getString("usuario_inclusao_ident");
 					d.nomeDoUsuarioQueIncluiu = rs.getString("usuario_inclusao_nome");
+					d.siglaDaUnidade = rs.getString("unidade_sigla");
 					d.conteudo = rs.getString("minuta_conteudo");
 					resp.list.add(d);
 				}
