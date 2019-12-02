@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.List;
 
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameLocalIdMesaId2DocumentosGet;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.Lembrete;
@@ -44,6 +43,7 @@ public class UsuarioUsernameLocalIdMesaId2DocumentosGet implements IUsuarioUsern
 					d.siglaDaUnidade = rs.getString("unidade_sigla");
 					d.conteudo = rs.getString("minuta_conteudo");
 					resp.list.add(d);
+					lastId = d.id;
 				}
 				if (rs.getString("lembrete_conteudo") != null) {
 					Lembrete lembrete = new Lembrete();
