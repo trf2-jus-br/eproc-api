@@ -27,6 +27,7 @@ public class UsuarioUsernameLocalIdMesaId2DocumentosGet implements IUsuarioUsern
 			MesaDocumento d = null;
 			while (rs.next()) {
 				if (!rs.getString("minuta_id").equals(lastId)) {
+					lastId = rs.getString("minuta_id");
 					d = new MesaDocumento();
 					d.dataDeInclusao = rs.getDate("minuta_inclusao");
 					d.id = rs.getString("minuta_id");

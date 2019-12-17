@@ -1,6 +1,7 @@
 package br.jus.trf2.sistemaprocessual;
 
 import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,6 +39,8 @@ public class UsuarioUsernameGet implements IUsuarioUsernameGet, ISwaggerPublicMe
 			throw new PresentableException("É necessário informar a senha");
 
 		String hash = null;
+		String hashFunction = null;
+		String hashPersistencia = null;
 		try (Connection conn = Utils.getConnection();
 				PreparedStatement q = conn.prepareStatement(Utils.getSQL("autenticar-post"));
 				PreparedStatement q2 = conn.prepareStatement(Utils.getSQL("usuario-username-get"))) {
@@ -47,17 +50,18 @@ public class UsuarioUsernameGet implements IUsuarioUsernameGet, ISwaggerPublicMe
 			while (rs.next()) {
 				resp.codusu = rs.getString("codusu");
 				hash = rs.getString("hash");
+				hashFunction = rs.getString("hash_function");
+				hashPersistencia = rs.getString("hash_persistencia");
 				break;
 			}
 
 			if (hash == null)
 				throw new PresentableUnloggedException("Usuário não encontrado");
 
-			String senha = Utils.asHex(Utils.calcSha256(password.getBytes(StandardCharsets.UTF_8)));
-			String hashDeTeste = BCrypt.hashpw(senha, hash);
-
+			String hashDeTeste = computeHash(password, hash, hashFunction, "HEX", hashPersistencia);
 			if (!hashDeTeste.equals(hash))
-				throw new PresentableUnloggedException("Usuário ou senha inválidos");
+				if (!verificarEstrategiasAlternativasDeSenha(password, hash))
+					throw new PresentableUnloggedException("Usuário ou senha inválidos");
 
 			q2.setString(1, login);
 			ResultSet rs2 = q2.executeQuery();
@@ -80,6 +84,71 @@ public class UsuarioUsernameGet implements IUsuarioUsernameGet, ISwaggerPublicMe
 			throw new PresentableUnloggedException(
 					"Não foi possível localizar informações para o usuário '" + req.username + "'");
 		}
+	}
+
+	public static boolean verificarEstrategiasAlternativasDeSenha(String password, String hash)
+			throws NoSuchAlgorithmException, PresentableException {
+		for (String c : new String[] { "REG", "UPPER", "LOWER" }) {
+			for (String h : new String[] { "MD5", "SHA1", "SHA256" }) {
+				for (String e : new String[] { "HEX", "BASE64" }) {
+					String p = c.equals("UPPER") ? password.toUpperCase()
+							: c.equals("LOWER") ? password.toLowerCase() : password;
+					String computed = computeHash(p, hash, h, e, "BCRYPT");
+					if (computed.equals(hash))
+						return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public static String computeHash(String password, String hash, String hashFunction, String encode,
+			String hashPersistencia) throws NoSuchAlgorithmException, PresentableException {
+		byte[] ab = null;
+
+		switch (hashFunction) {
+		case "MD5":
+			ab = Utils.calcMd5(password.getBytes(StandardCharsets.UTF_8));
+			break;
+		case "SHA1":
+			ab = Utils.calcSha1(password.getBytes(StandardCharsets.UTF_8));
+			break;
+		case "SHA256":
+			ab = Utils.calcSha256(password.getBytes(StandardCharsets.UTF_8));
+			break;
+		case "CRC":
+		case "BCRYPT":
+		case "SHA1 (TRF2)":
+		default:
+			throw new PresentableException("Método de hash não implementado: " + hashFunction);
+		}
+
+		String senha = null;
+		switch (encode) {
+		case "HEX":
+			senha = Utils.asHex(ab);
+			break;
+		case "BASE64":
+			senha = SwaggerUtils.base64Encode(ab);
+			break;
+		default:
+			throw new PresentableException("Método de encode não implementado: " + encode);
+		}
+
+		String hashDeTeste = null;
+		switch (hashPersistencia) {
+		case "BCRYPT":
+			hashDeTeste = BCrypt.hashpw(senha, hash);
+			break;
+		case "MD5":
+		case "SHA1":
+		case "SHA256":
+		case "CRC":
+		case "SHA1 (TRF2)":
+		default:
+			throw new PresentableException("Método de persistência de hash não implementado: " + hashPersistencia);
+		}
+		return hashDeTeste;
 	}
 
 	public static String getIdPessoaFromUsername(Connection conn, String login) throws SQLException {
