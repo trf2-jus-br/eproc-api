@@ -160,6 +160,7 @@ from
                         nome like '%ADVOGADO%' 
                         and sin_ativo = 'S' 
                   )
+                  OR cod_tipo_usuario = 'CEF'
             )
             and usu.parte_processo = 0 ) 
             or 
@@ -204,6 +205,7 @@ from
                            nome like '%ADVOGADO%' 
                            and sin_ativo = 'S' 
                      )
+                   
                )
                and usu.parte_processo = 1 
             )
@@ -222,8 +224,9 @@ from
                   from
                      tipo_usuario 
                   where
-                     sin_perfil_mpf = 'S' 
-                     and sin_ativo = 'S' 
+                    ( sin_perfil_mpf = 'S' 
+                     and sin_ativo = 'S')
+					or cod_tipo_usuario = 'CEF' 
                )
                and usu.parte_processo = 0 
             )
@@ -259,8 +262,9 @@ from
                   from
                      tipo_usuario 
                   where
-                     sin_perfil_mpf = 'S' 
-                     and sin_ativo = 'S' 
+                     (sin_perfil_mpf = 'S' 
+                     and sin_ativo = 'S')
+						
                )
                and usu.parte_processo = 1 
             )
@@ -290,9 +294,11 @@ where
                   tipo_usuario 
                where
                   sin_perfil_mpf = 'S' 
-                  and sin_ativo = 'S' 
+                  and sin_ativo = 'S'
+					 
             )
             or nome like'ADVOGADO%' 
+          
             and sin_ativo = 'S' 
       )
 ) 
@@ -313,9 +319,11 @@ where
                   from
                      tipo_usuario 
                   where
-                     sin_perfil_pf = 'S' 
-                     and sin_ativo = 'S' 
+                    ( sin_perfil_pf = 'S' 
+                     and sin_ativo = 'S')
+						 
                )
+               or id_perfil=81 
          )
       )
    )
