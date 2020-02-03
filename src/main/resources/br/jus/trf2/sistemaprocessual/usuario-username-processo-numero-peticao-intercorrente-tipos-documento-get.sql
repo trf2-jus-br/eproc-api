@@ -323,7 +323,7 @@ where
                      and sin_ativo = 'S')
 						 
                )
-               or id_perfil=81 
+               or id_perfil=81 -- Perfil de usuario externo da CEF no TRF2
          )
       )
    )
