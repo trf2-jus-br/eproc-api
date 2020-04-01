@@ -85,7 +85,7 @@ from
    minuta m 
    LEFT JOIN minuta_bloqueio
    ON m.id_minuta = minuta_bloqueio.id_minuta
-   inner join
+   left join
       versao_conteudo v 
       on v.id_versao_conteudo = m.id_versao_conteudo_ultima 
    inner join
