@@ -1,5 +1,6 @@
 select
    pe.dth_evento as data_evento,
+   prazo_processo.data_final_prazo as data_prazo_final,
    prazo_processo.num_dias_prazo_evento as prazo,
    adddate(pe.dth_evento, interval 10 day) as datalimiteintauto,
    e1.des_evento as evento,
@@ -41,7 +42,7 @@ from
          from
             v_usuario vu 
          where
-            ident_principal = ?
+            ident_principal = ? 
             and sin_ativo = 'S' 
       )
       and processo_parte_procurador.sin_ativo = 'S' 
@@ -69,12 +70,16 @@ from
       )
       on prazo_processo.id_processo_evento_abriu = pe.id_processo_evento 
 where
-   prazo_processo.status_prazo = 'A' 
-   and prazo_processo.data_inicial_prazo is null 
-   and (processo.id_sigilo = 0 
-   or processo.id_sigilo IS NULL 
-   or sf_verificaAcesso(trim(processo.num_processo), processo_parte_procurador.id_usuario_procurador) = 0)
-   and ADDDATE(pe.dth_evento, INTERVAL 10 DAY) > NOW()
+   prazo_processo.status_prazo in
+   (
+      'A'
+   )
+   and 
+   (
+      processo.id_sigilo = 0 
+      or processo.id_sigilo IS NULL 
+      or sf_verificaAcesso(trim(processo.num_processo), processo_parte_procurador.id_usuario_procurador) = 0
+   )
 order by
    pe.dth_evento asc,
    processo.num_processo asc

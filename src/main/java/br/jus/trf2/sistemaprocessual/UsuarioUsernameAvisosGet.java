@@ -42,6 +42,7 @@ public class UsuarioUsernameAvisosGet implements IUsuarioUsernameAvisosGet {
 				i.multiplicadorPrazo = null;
 				i.dataLimiteIntimacaoAutomatica = rs.getTimestamp("datalimiteintauto");
 				i.assunto = rs.getString("assunto");
+				i.dataFinalPrazo =  rs.getTimestamp("data_prazo_final");
 
 				resp.list.add(i);
 			}
