@@ -1,35 +1,20 @@
 select
-   mag.nome_magistrado magistrado
+   m.nome_magistrado magistrado 
 from
-   magistrado mag 
+   magistrado m 
+   left join
+      juizo_magistrado jm 
+      on (m.cod_magistrado = jm.cod_magistrado) 
+   left join
+      processo p 
+      on (jm.id_orgao = p.id_orgao_juizo) 
+   left join
+      situacao_magistrado_juizo smj 
+      on (jm.cod_situacao_magistrado_juizo = smj.cod_situacao_magistrado_juizo) 
 where
-   mag.cod_magistrado = 
-   (
-      select
-         jm.cod_magistrado 
-      from
-         juizo_magistrado jm 
-      where
-         jm.id_orgao = 
-         (
-            select
-               sso.id_orgao_juizo 
-            from
-               processo sso 
-            where
-               sso.id_processo = 
-               (
-                  select
-                     id_processo 
-                  from
-                     processo 
-                  where
-                     num_processo = ?
-               )
-               and jm.dth_final_juizo > current_date()
-         )
-         and jm.cod_situacao_magistrado_juizo = 1 
-         and jm.sin_ativo = 'S' 
-         and jm.dth_desativacao is null
-   )
-   and mag.sin_ativo = 'S';
+   p.num_processo = ? 
+   and current_date() between dth_inicio_juizo and jm.dth_final_juizo 
+   and smj.des_situacao_magistrado_juizo = 'ATUANTE' 
+   and jm.sin_ativo = 'S' 
+   and jm.dth_desativacao is null 
+   and m.sin_ativo = 'S';
