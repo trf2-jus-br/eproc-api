@@ -73,6 +73,7 @@ SELECT
    as processo_reu,   
    td.des_tipo_documento documento_tipo,
    v.conteudo as minuta_conteudo,
+   cas.uuid_versao_conteudo as uuid_cas,
    ui.ident_principal usuario_inclusao_ident,
    pni.nome_pessoa usuario_inclusao_nome,
    ml.dth_inclusao lembrete_inclusao,
@@ -87,7 +88,9 @@ from
    ON m.id_minuta = minuta_bloqueio.id_minuta
    left join
       versao_conteudo v 
-      on v.id_versao_conteudo = m.id_versao_conteudo_ultima 
+      on v.id_versao_conteudo = m.id_versao_conteudo_ultima
+	left join versao_conteudo_cas cas
+		on (v.id_versao_conteudo = cas.id_versao_conteudo)
    inner join
       versao_conteudo vv 
       on vv.id_versao_conteudo = m.id_versao_modelo_matriz 
