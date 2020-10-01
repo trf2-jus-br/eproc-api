@@ -55,7 +55,7 @@ public class UsuarioUsernameLocalIdMesaId2DocumentosGet implements IUsuarioUsern
 					String uuidCas = rs.getString("uuid_cas");
 					if (uuidCas != null) {
 						HttpURLConnection con = null;
-						URL obj = new URL(SwaggerServlet.getDefinedProperty("caringo.url") + uuidCas);
+						URL obj = new URL(SwaggerServlet.getProperty("caringo.url") + uuidCas);
 						con = (HttpURLConnection) obj.openConnection();
 
 						con.setRequestProperty("User-Agent", "SwaggerServlets");
