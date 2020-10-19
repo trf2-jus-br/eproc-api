@@ -55,7 +55,8 @@ from
                         pessoa_identificacao 
                         on (usuario.id_pessoa = pessoa_identificacao.id_pessoa) 
                   where
-                     pessoa_identificacao.ident_principal = ? 
+                     pessoa_identificacao.ident_principal = ? 							
+                     
                )
                tabela 
                left join
@@ -106,7 +107,7 @@ from
                            pessoa_identificacao pi_aea 
                            on (u_aea.id_pessoa = pi_aea.id_pessoa ) 
                      where
-                        p.num_processo = ? 
+                        p.num_processo = ?
                   )
                   tabela2 
                   on (usuario.id_usuario = tabela2.id_usuario_procurador ) 
@@ -160,9 +161,20 @@ from
                         nome like '%ADVOGADO%' 
                         and sin_ativo = 'S' 
                   )
-                  OR cod_tipo_usuario = 'CEF'
+                  OR cod_tipo_usuario = 'CEF' 
             )
             and usu.parte_processo = 0 ) 
+          /*  or 
+            (
+               tipo_peticao_judicial.sin_peticao_advogado = 'S' 
+               and tipo_peticao_judicial.id_tipo_peticao_judicial in 
+               (
+                  52,
+                  105 
+               )
+               and cod_tipo_usuario = 'CEF' 
+               and usu.parte_processo = 1 
+            ) */
             or 
             (
                tipo_peticao_judicial.id_tipo_peticao_judicial in 
@@ -205,7 +217,7 @@ from
                            nome like '%ADVOGADO%' 
                            and sin_ativo = 'S' 
                      )
-                   
+                     OR cod_tipo_usuario = 'CEF'
                )
                and usu.parte_processo = 1 
             )
@@ -224,9 +236,11 @@ from
                   from
                      tipo_usuario 
                   where
-                    ( sin_perfil_mpf = 'S' 
-                     and sin_ativo = 'S')
-					or cod_tipo_usuario = 'CEF' 
+                     (
+                        sin_perfil_mpf = 'S' 
+                        and sin_ativo = 'S'
+                     )
+                     or cod_tipo_usuario = 'CEF' 
                )
                and usu.parte_processo = 0 
             )
@@ -262,9 +276,11 @@ from
                   from
                      tipo_usuario 
                   where
-                     (sin_perfil_mpf = 'S' 
-                     and sin_ativo = 'S')
-						
+                     (
+                        sin_perfil_mpf = 'S' 
+                        and sin_ativo = 'S'
+                     )
+                     OR cod_tipo_usuario = 'CEF'
                )
                and usu.parte_processo = 1 
             )
@@ -294,11 +310,9 @@ where
                   tipo_usuario 
                where
                   sin_perfil_mpf = 'S' 
-                  and sin_ativo = 'S'
-					 
+                  and sin_ativo = 'S' 
             )
             or nome like'ADVOGADO%' 
-          
             and sin_ativo = 'S' 
       )
 ) 
@@ -319,11 +333,12 @@ where
                   from
                      tipo_usuario 
                   where
-                    ( sin_perfil_pf = 'S' 
-                     and sin_ativo = 'S')
-						 
+                     (
+                        sin_perfil_pf = 'S' 
+                        and sin_ativo = 'S'
+                     )
                )
-               or id_perfil=81 -- Perfil de usuario externo da CEF no TRF2
+               or id_perfil = 81 					-- Perfil de usuario externo da CEF no TRF2
          )
       )
    )
@@ -335,7 +350,7 @@ where
          usuario_tipo_peticao.parte_processo = false 
          and tipo_documento.cod_tipo_documento not in 
          (
-            204
+            204 
          )
       )
    )
