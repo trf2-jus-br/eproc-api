@@ -36,7 +36,7 @@ public class UsuarioUsernameProcessoNumerosGet implements IUsuarioUsernameProces
 			while (rs.next()) {
 				Processo p = new Processo();
 				p.numero = rs.getString("numero");
-				p.orgao = SwaggerServlet.getProperty("orgao.sigla");
+				p.orgao = EprocServlet.INSTANCE.getProperty("orgao.sigla");
 				p.unidade = rs.getString("unidade");
 				p.localNaUnidade = rs.getString("localnaunidade"); // Apresentar
 																	// isso

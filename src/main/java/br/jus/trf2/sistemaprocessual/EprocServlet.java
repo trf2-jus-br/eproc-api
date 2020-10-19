@@ -12,9 +12,13 @@ import com.crivano.swaggerservlet.dependency.TestableDependency;
 
 public class EprocServlet extends SwaggerServlet {
 	private static final long serialVersionUID = 1756711359239182178L;
+	
+	static EprocServlet INSTANCE;
 
 	@Override
 	public void initialize(ServletConfig config) throws ServletException {
+		INSTANCE = this;
+		
 		setAPI(ISistemaProcessual.class);
 
 		setActionPackage("br.jus.trf2.sistemaprocessual");
@@ -66,8 +70,8 @@ public class EprocServlet extends SwaggerServlet {
 	}
 
 	@Override
-	public int errorCode(Exception e) {
-		return e.getMessage() == null || !e.getMessage().endsWith("(Alerta)") ? super.errorCode(e) : 400;
+	public int errorStatus(Exception e) {
+		return e.getMessage() == null || !e.getMessage().endsWith("(Alerta)") ? super.errorStatus(e) : 400;
 	}
 
 	@Override

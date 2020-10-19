@@ -31,7 +31,7 @@ public class UsuarioUsernameAvisosGet implements IUsuarioUsernameAvisosGet {
 				i.unidade = rs.getString("unidade");
 				i.unidadeNome = null;
 				i.unidadeTipo = null;
-				i.orgao = SwaggerServlet.getProperty("orgao.sigla");
+				i.orgao = EprocServlet.INSTANCE.getProperty("orgao.sigla");
 
 				i.localidade = null;
 				i.teor = null;

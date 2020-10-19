@@ -19,7 +19,7 @@ import com.crivano.swaggerservlet.SwaggerServlet;
 
 public class Utils {
 	public static Connection getConnection() throws Exception {
-		String dsName = SwaggerServlet.getProperty("datasource.name");
+		String dsName = EprocServlet.INSTANCE.getProperty("datasource.name");
 		if (dsName != null) {
 			Context initContext = new InitialContext();
 			Context envContext = (Context) initContext.lookup("java:");
@@ -33,10 +33,10 @@ public class Utils {
 
 			Class.forName("com.mysql.jdbc.Driver");
 
-			String dbURL = SwaggerServlet.getProperty("datasource.url");
-			String username = SwaggerServlet.getProperty("datasource.username");
+			String dbURL = EprocServlet.INSTANCE.getProperty("datasource.url");
+			String username = EprocServlet.INSTANCE.getProperty("datasource.username");
 			;
-			String password = SwaggerServlet.getProperty("datasource.password");
+			String password = EprocServlet.INSTANCE.getProperty("datasource.password");
 			;
 			connection = DriverManager.getConnection(dbURL, username, password);
 			if (connection == null)
