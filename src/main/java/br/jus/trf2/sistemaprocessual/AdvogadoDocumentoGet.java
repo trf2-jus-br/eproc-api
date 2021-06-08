@@ -5,17 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.AdvogadoDocumentoGetRequest;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.AdvogadoDocumentoGetResponse;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IAdvogadoDocumentoGet;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.Pessoa;
 
 public class AdvogadoDocumentoGet implements IAdvogadoDocumentoGet {
 
 	@Override
-	public void run(AdvogadoDocumentoGetRequest req, AdvogadoDocumentoGetResponse resp) throws Exception {
-		resp.list = new ArrayList<>();
-
+	public void run(Request req, Response resp, SistemaProcessualContext ctx) throws Exception {
 		try (Connection conn = Utils.getConnection();
 				PreparedStatement q = conn.prepareStatement(Utils.getSQL("advogado-documento-get"))) {
 			q.setString(1, req.documento);

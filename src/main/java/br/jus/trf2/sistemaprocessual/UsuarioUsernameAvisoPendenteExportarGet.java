@@ -1,14 +1,11 @@
 package br.jus.trf2.sistemaprocessual;
 
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameAvisoPendenteExportarGet;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameAvisoPendenteExportarGetRequest;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameAvisoPendenteExportarGetResponse;
 
 public class UsuarioUsernameAvisoPendenteExportarGet implements IUsuarioUsernameAvisoPendenteExportarGet {
 
 	@Override
-	public void run(UsuarioUsernameAvisoPendenteExportarGetRequest req,
-			UsuarioUsernameAvisoPendenteExportarGetResponse resp) throws Exception {
+	public void run(Request req, Response resp, SistemaProcessualContext ctx) throws Exception {
 	}
 
 	@Override

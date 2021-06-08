@@ -7,17 +7,12 @@ import java.util.ArrayList;
 
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.ILocalidadeIdEspecialidadeId2ClasseId3AssuntoGet;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IdNome;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.LocalidadeIdEspecialidadeId2ClasseId3AssuntoGetRequest;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.LocalidadeIdEspecialidadeId2ClasseId3AssuntoGetResponse;
 
 public class LocalidadeIdEspecialidadeId2ClasseId3AssuntoGet
 		implements ILocalidadeIdEspecialidadeId2ClasseId3AssuntoGet {
 
 	@Override
-	public void run(LocalidadeIdEspecialidadeId2ClasseId3AssuntoGetRequest req,
-			LocalidadeIdEspecialidadeId2ClasseId3AssuntoGetResponse resp) throws Exception {
-		resp.list = new ArrayList<>();
-
+	public void run(Request req, Response resp, SistemaProcessualContext ctx) throws Exception {
 		try (Connection conn = Utils.getConnection();
 				PreparedStatement q = conn
 						.prepareStatement(Utils.getSQL("localidade-id-especialidade-id2-classe-id3-assunto-get"))) {

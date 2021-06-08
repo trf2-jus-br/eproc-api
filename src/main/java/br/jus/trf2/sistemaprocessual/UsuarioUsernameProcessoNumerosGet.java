@@ -5,32 +5,27 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import com.crivano.swaggerservlet.SwaggerServlet;
-
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameProcessoNumerosGet;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.Processo;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameProcessoNumerosGetRequest;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameProcessoNumerosGetResponse;
 
 public class UsuarioUsernameProcessoNumerosGet implements IUsuarioUsernameProcessoNumerosGet {
 
 	@Override
-	public void run(UsuarioUsernameProcessoNumerosGetRequest req, UsuarioUsernameProcessoNumerosGetResponse resp)
-			throws Exception {
-		
-        String[] list = req.numeros.split(",");
-        char[] markers = new char[list.length * 2 - 1];
-        for (int i = 0; i < markers.length; i++)
-            markers[i] = ((i & 1) == 0 ? '?' : ',');
+	public void run(Request req, Response resp, SistemaProcessualContext ctx) throws Exception {
 
-        String statement = Utils.getSQL("processo-validar-numero-get");
-        statement = statement.replace(":list", new String(markers));
-        try (Connection conn = Utils.getConnection(); PreparedStatement q = conn.prepareStatement(statement)) {
-            int i = 1;
-            for (String s : list)
-                q.setString(i++, s);
-            q.setString(i, req.username);
-            ResultSet rs = q.executeQuery();
+		String[] list = req.numeros.split(",");
+		char[] markers = new char[list.length * 2 - 1];
+		for (int i = 0; i < markers.length; i++)
+			markers[i] = ((i & 1) == 0 ? '?' : ',');
+
+		String statement = Utils.getSQL("processo-validar-numero-get");
+		statement = statement.replace(":list", new String(markers));
+		try (Connection conn = Utils.getConnection(); PreparedStatement q = conn.prepareStatement(statement)) {
+			int i = 1;
+			for (String s : list)
+				q.setString(i++, s);
+			q.setString(i, req.username);
+			ResultSet rs = q.executeQuery();
 
 			resp.list = new ArrayList<>();
 			while (rs.next()) {

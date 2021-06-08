@@ -5,18 +5,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import com.crivano.swaggerservlet.SwaggerServlet;
-
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.Contagem;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernamePeticaoIntercorrenteContarGet;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernamePeticaoIntercorrenteContarGetRequest;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernamePeticaoIntercorrenteContarGetResponse;
 
 public class UsuarioUsernamePeticaoIntercorrenteContarGet implements IUsuarioUsernamePeticaoIntercorrenteContarGet {
 
 	@Override
-	public void run(UsuarioUsernamePeticaoIntercorrenteContarGetRequest req,
-			UsuarioUsernamePeticaoIntercorrenteContarGetResponse resp) throws Exception {
+	public void run(Request req, Response resp, SistemaProcessualContext ctx) throws Exception {
 		try (Connection conn = Utils.getConnection();
 				PreparedStatement q = conn
 						.prepareStatement(Utils.getSQL("usuario-username-peticao-intercorrente-contar-get"))) {
@@ -24,7 +19,6 @@ public class UsuarioUsernamePeticaoIntercorrenteContarGet implements IUsuarioUse
 			q.setInt(2, Integer.parseInt(req.dias));
 			ResultSet rs = q.executeQuery();
 
-			resp.list = new ArrayList<>();
 			while (rs.next()) {
 				Contagem c = new Contagem();
 				c.data = rs.getString("data");

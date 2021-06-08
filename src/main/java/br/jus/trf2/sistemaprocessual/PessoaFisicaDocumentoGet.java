@@ -3,19 +3,14 @@ package br.jus.trf2.sistemaprocessual;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IPessoaFisicaDocumentoGet;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.Pessoa;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.PessoaFisicaDocumentoGetRequest;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.PessoaFisicaDocumentoGetResponse;
 
 public class PessoaFisicaDocumentoGet implements IPessoaFisicaDocumentoGet {
 
 	@Override
-	public void run(PessoaFisicaDocumentoGetRequest req, PessoaFisicaDocumentoGetResponse resp) throws Exception {
-		resp.list = new ArrayList<>();
-
+	public void run(Request req, Response resp, SistemaProcessualContext ctx) throws Exception {
 		try (Connection conn = Utils.getConnection();
 				PreparedStatement q = conn.prepareStatement(Utils.getSQL("pessoa-fisica-documento-get"))) {
 			q.setString(1, req.documento);

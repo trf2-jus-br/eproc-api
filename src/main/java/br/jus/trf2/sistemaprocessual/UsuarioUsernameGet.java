@@ -16,13 +16,11 @@ import com.crivano.swaggerservlet.SwaggerServlet;
 import com.crivano.swaggerservlet.SwaggerUtils;
 
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameGet;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameGetRequest;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameGetResponse;
 
 public class UsuarioUsernameGet implements IUsuarioUsernameGet, ISwaggerPublicMethod {
 
 	@Override
-	public void run(UsuarioUsernameGetRequest req, UsuarioUsernameGetResponse resp) throws Exception {
+	public void run(Request req, Response resp, SistemaProcessualContext ctx) throws Exception {
 		String login;
 		String password;
 		String auth = SwaggerServlet.getHttpServletRequest().getHeader("Authorization");

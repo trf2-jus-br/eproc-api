@@ -8,19 +8,15 @@ import java.util.ArrayList;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.ClasseCNJ;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.ILocalidadeIdEspecialidadeId2ClasseGet;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IdNomeClasseCNJ;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.LocalidadeIdEspecialidadeId2ClasseGetRequest;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.LocalidadeIdEspecialidadeId2ClasseGetResponse;
 
 public class LocalidadeIdEspecialidadeId2ClasseGet implements ILocalidadeIdEspecialidadeId2ClasseGet {
 
 	@Override
-	public void run(LocalidadeIdEspecialidadeId2ClasseGetRequest req,
-			LocalidadeIdEspecialidadeId2ClasseGetResponse resp) throws Exception {
-		resp.list = new ArrayList<>();
-
+	public void run(Request req, Response resp, SistemaProcessualContext ctx) throws Exception {
 		try (Connection conn = Utils.getConnection();
-				PreparedStatement q = conn.prepareStatement(Utils.getSQL("localidade-id-especialidade-id2-classe-get"))) {
-			q.setInt(1, Integer.parseInt(req.id.substring(0,2)));
+				PreparedStatement q = conn
+						.prepareStatement(Utils.getSQL("localidade-id-especialidade-id2-classe-get"))) {
+			q.setInt(1, Integer.parseInt(req.id.substring(0, 2)));
 			q.setInt(2, Integer.parseInt(req.id.substring(2)));
 			q.setInt(3, Integer.parseInt(req.id2));
 			ResultSet rs = q.executeQuery();

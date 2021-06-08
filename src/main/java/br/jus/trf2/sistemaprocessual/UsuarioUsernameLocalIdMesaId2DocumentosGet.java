@@ -10,20 +10,16 @@ import java.util.ArrayList;
 
 import com.crivano.swaggerservlet.PresentableException;
 import com.crivano.swaggerservlet.SwaggerError;
-import com.crivano.swaggerservlet.SwaggerServlet;
 import com.crivano.swaggerservlet.SwaggerUtils;
 
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameLocalIdMesaId2DocumentosGet;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.Lembrete;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.MesaDocumento;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameLocalIdMesaId2DocumentosGetRequest;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameLocalIdMesaId2DocumentosGetResponse;
 
 public class UsuarioUsernameLocalIdMesaId2DocumentosGet implements IUsuarioUsernameLocalIdMesaId2DocumentosGet {
 
 	@Override
-	public void run(UsuarioUsernameLocalIdMesaId2DocumentosGetRequest req,
-			UsuarioUsernameLocalIdMesaId2DocumentosGetResponse resp) throws Exception {
+	public void run(Request req, Response resp, SistemaProcessualContext ctx) throws Exception {
 		try (Connection conn = Utils.getConnection();
 				PreparedStatement q = conn.prepareStatement(Utils.getSQL("usuario-username-minutas"))) {
 			q.setString(1, req.username);
@@ -50,7 +46,7 @@ public class UsuarioUsernameLocalIdMesaId2DocumentosGet implements IUsuarioUsern
 					d.nomeDoUsuarioQueIncluiu = rs.getString("usuario_inclusao_nome");
 					d.siglaDaUnidade = rs.getString("unidade_sigla");
 					d.conteudo = rs.getString("minuta_conteudo");
-					
+
 					// Obtem o texto da minuta no Caringo
 					String uuidCas = rs.getString("uuid_cas");
 					if (uuidCas != null) {
@@ -79,7 +75,7 @@ public class UsuarioUsernameLocalIdMesaId2DocumentosGet implements IUsuarioUsern
 							errormsg = errormsg.replaceAll("\\s+", " ");
 							throw new PresentableException(errormsg);
 						}
-						
+
 						d.conteudo = SwaggerUtils.convertStreamToString(con.getInputStream());
 					}
 					resp.list.add(d);

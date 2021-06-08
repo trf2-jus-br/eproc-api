@@ -4,19 +4,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Date;
 
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.CDA;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameProcessoNumeroInformacoesAdicionaisGet;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameProcessoNumeroInformacoesAdicionaisGetRequest;
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.UsuarioUsernameProcessoNumeroInformacoesAdicionaisGetResponse;
 
 public class UsuarioUsernameProcessoNumeroInformacoesAdicionaisGet
 		implements IUsuarioUsernameProcessoNumeroInformacoesAdicionaisGet {
 
 	@Override
-	public void run(UsuarioUsernameProcessoNumeroInformacoesAdicionaisGetRequest req,
-			UsuarioUsernameProcessoNumeroInformacoesAdicionaisGetResponse resp) throws Exception {
+	public void run(Request req, Response resp, SistemaProcessualContext ctx) throws Exception {
 		try (Connection conn = Utils.getConnection();
 				PreparedStatement q = conn.prepareStatement(Utils.getSQL("processo-informacoes-adicionais-cdas"))) {
 			q.setString(1, req.numero);
