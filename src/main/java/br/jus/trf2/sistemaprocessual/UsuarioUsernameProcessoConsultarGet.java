@@ -5,25 +5,30 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameProcessoNomeparteConsultarNomeGet;
+import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameProcessoConsultarGet;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.Processo;
 
-public class UsuarioUsernameProcessoNomeparteConsultarNomeGet 
-implements IUsuarioUsernameProcessoNomeparteConsultarNomeGet {
+public class UsuarioUsernameProcessoConsultarGet implements IUsuarioUsernameProcessoConsultarGet {
 
 	@Override
 	public String getContext() {
-		return "consultar processo pelo nome da parte";
+		return "consultar processo pelo cpf ou cnpj ou nome da parte";
 	}
 
 	@Override
 	public void run(Request req, Response resp, SistemaProcessualContext ctx) throws Exception {
-		
+		System.out.println("@@@ PASSEI POR AQUI!");
+		try (Connection conn = Utils.getConnection();
+				PreparedStatement q = conn.prepareStatement(Utils
+						.getSQL("processo-consultar-" + (req.documento != null ? "documento" : "nome") + "-get"))) {
+			if (req.documento != null) {
+				q.setString(1, req.documento);
+				q.setString(2, req.username);
+			} else {
+				q.setString(1, req.nomeparte);
+				q.setString(2, req.username);
 
-		try (Connection conn = Utils.getConnection(); 
-			PreparedStatement q = conn.prepareStatement(Utils.getSQL("processo-consultar-nome-get"))) {
-			q.setString(1, req.nomeparte);
-			q.setString(2, req.username);
+			}
 			ResultSet rs = q.executeQuery();
 
 			resp.list = new ArrayList<>();
