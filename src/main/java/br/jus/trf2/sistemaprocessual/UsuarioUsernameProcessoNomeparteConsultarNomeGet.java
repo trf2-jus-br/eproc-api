@@ -5,15 +5,15 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameDocumentoParteProcessoDocumentoConsultarGet;
+import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameProcessoNomeparteConsultarNomeGet;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.Processo;
 
-public class UsuarioUsernameDocumentoParteProcessoDocumentoConsultarGet 
-implements IUsuarioUsernameDocumentoParteProcessoDocumentoConsultarGet {
+public class UsuarioUsernameProcessoNomeparteConsultarNomeGet 
+implements IUsuarioUsernameProcessoNomeparteConsultarNomeGet {
 
 	@Override
 	public String getContext() {
-		return "consultar processo pelo cpf ou cnpj da parte";
+		return "consultar processo pelo nome da parte";
 	}
 
 	@Override
@@ -21,8 +21,8 @@ implements IUsuarioUsernameDocumentoParteProcessoDocumentoConsultarGet {
 		
 
 		try (Connection conn = Utils.getConnection(); 
-			PreparedStatement q = conn.prepareStatement(Utils.getSQL("processo-consultar-documento-get"))) {
-			q.setString(1, req.documento);
+			PreparedStatement q = conn.prepareStatement(Utils.getSQL("processo-consultar-nome-get"))) {
+			q.setString(1, req.nomeparte);
 			q.setString(2, req.username);
 			ResultSet rs = q.executeQuery();
 
