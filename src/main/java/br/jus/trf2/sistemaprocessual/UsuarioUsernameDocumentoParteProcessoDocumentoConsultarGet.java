@@ -23,6 +23,7 @@ implements IUsuarioUsernameDocumentoParteProcessoDocumentoConsultarGet {
 		try (Connection conn = Utils.getConnection(); 
 			PreparedStatement q = conn.prepareStatement(Utils.getSQL("processo-consultar-documento-get"))) {
 			q.setString(1, req.documento);
+			q.setString(2, req.username);
 			ResultSet rs = q.executeQuery();
 
 			resp.list = new ArrayList<>();

@@ -166,7 +166,7 @@ from
 where
    ip.nome = 'EPROC_TIPO_ESTRUTURA_ORGAO' 
    and 
-   pn.nome_pessoa  like ? 
+   pn.nome_pessoa  = ? 
 	
    and 
    (

@@ -21,8 +21,9 @@ implements IUsuarioUsernameNomeParteProcessoNomeConsultarGet {
 		
 
 		try (Connection conn = Utils.getConnection(); 
-			PreparedStatement q = conn.prepareStatement(Utils.getSQL("processo-consultar-numero-get"))) {
+			PreparedStatement q = conn.prepareStatement(Utils.getSQL("processo-consultar-nome-get"))) {
 			q.setString(1, req.nome);
+			q.setString(2, req.username);
 			ResultSet rs = q.executeQuery();
 
 			resp.list = new ArrayList<>();
