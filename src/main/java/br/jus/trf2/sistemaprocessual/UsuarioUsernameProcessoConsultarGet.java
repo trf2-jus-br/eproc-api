@@ -17,7 +17,6 @@ public class UsuarioUsernameProcessoConsultarGet implements IUsuarioUsernameProc
 
 	@Override
 	public void run(Request req, Response resp, SistemaProcessualContext ctx) throws Exception {
-		System.out.println("@@@ PASSEI POR AQUI!");
 		try (Connection conn = Utils.getConnection();
 				PreparedStatement q = conn.prepareStatement(Utils
 						.getSQL("processo-consultar-" + (req.documento != null ? "documento" : "nome") + "-get"))) {
