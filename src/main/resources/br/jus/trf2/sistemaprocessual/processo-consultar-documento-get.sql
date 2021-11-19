@@ -1,4 +1,4 @@
-select
+select distinct
    ip.valor as instancia,
    p.num_processo numero,
    (
@@ -185,3 +185,4 @@ where
             and sf_verificaacesso(p.num_processo, u.id_usuario) = 0 
       )
    )
+   limit 100
