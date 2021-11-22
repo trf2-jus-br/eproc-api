@@ -166,7 +166,7 @@ from
 where
    ip.nome = 'EPROC_TIPO_ESTRUTURA_ORGAO' 
    and 
-   pn.nome_pessoa  = ? 
+   UPPER(pn.nome_pessoa)  = ? 
 	
    and 
    (
@@ -179,7 +179,7 @@ where
          from
             v_usuario u 
          where
-            u.ident_principal = ?
+           u.ident_principal = ?
             and u.sin_ativo = 'S' 
             and sf_verificaacesso(p.num_processo, u.id_usuario) = 0 
       )
