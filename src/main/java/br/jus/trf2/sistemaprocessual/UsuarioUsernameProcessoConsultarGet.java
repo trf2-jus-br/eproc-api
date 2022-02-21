@@ -12,21 +12,25 @@ public class UsuarioUsernameProcessoConsultarGet implements IUsuarioUsernameProc
 
 	@Override
 	public String getContext() {
-		return "consultar processo pelo cpf ou cnpj ou nome da parte";
+		return "consultar processo pelo cpf,cnpj,oab ou nome da parte";
 	}
 
 	@Override
 	public void run(Request req, Response resp, SistemaProcessualContext ctx) throws Exception {
 		try (Connection conn = Utils.getConnection();
 				PreparedStatement q = conn.prepareStatement(Utils
-						.getSQL("processo-consultar-" + (req.documento != null ? "documento" : "nome") + "-get"))) {
+						.getSQL("processo-consultar-" + (req.documento != null ? "documento" :
+							                                  req.nomeparte != null ? "nome" : "oab") + "-get"))) {
+
 			if (req.documento != null) {
 				q.setString(1, req.documento);
-				q.setString(2, req.username);
-			} else {
+				q.setString(2, req.documento);
+			} else if (req.nomeparte != null)  {
 				q.setString(1, req.nomeparte);
-				q.setString(2, req.username);
-
+				q.setString(2, req.nomeparte);
+			}else {
+				q.setString(1, req.oab);
+				q.setString(2, req.oab);
 			}
 			ResultSet rs = q.executeQuery();
 
