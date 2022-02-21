@@ -158,7 +158,9 @@ select distinct
 from
    processo p inner join 
    processo_parte pp on (pp.id_processo =p.id_processo) inner join
-   pessoa pe on (pe.id_pessoa=pp.id_pessoa) inner join
+   processo_parte_procurador ppp on (ppp.id_processo_parte =pp.id_processo_parte) inner join
+   usuario u on (u.id_usuario = ppp.id_usuario_procurador) inner join
+   pessoa pe on (pe.id_pessoa=u.id_pessoa) inner join
    pessoa_nome pn on pn.id_pessoa = pe.id_pessoa
    and pn.seq_nome_pessoa = pe.seq_nome
    left join pessoa_identificacao pi on (pe.id_pessoa = pi.id_pessoa)
@@ -167,7 +169,7 @@ where
    ip.nome = 'EPROC_TIPO_ESTRUTURA_ORGAO' 
    and 
    (
-   pi.ident_principal = ? and pi.tipo_identificacao in ('CNPJ','CPF')
+   pi.ident_principal = ? and pi.tipo_identificacao = 'OAB'
    )
    and 
    (
@@ -185,4 +187,4 @@ where
             and sf_verificaacesso(p.num_processo, u.id_usuario) = 0 
       )
    )
-   limit 100
+   limit 100;
