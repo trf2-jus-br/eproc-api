@@ -164,6 +164,7 @@ from
    left join pessoa_identificacao pi on (pe.id_pessoa = pi.id_pessoa)
    , infra_parametro ip 
 where
+   status_processo <> 'B' and
    ip.nome = 'EPROC_TIPO_ESTRUTURA_ORGAO' 
    and 
    (
