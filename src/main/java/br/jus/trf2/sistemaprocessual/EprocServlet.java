@@ -28,7 +28,7 @@ public class EprocServlet extends SwaggerServlet {
 
 		addPublicProperty("orgao.sigla");
 		addRestrictedProperty("caringo.url");
-		
+		addPrivateProperty("limite.consulta.processo");
 		addRestrictedProperty("datasource.url", null);
 		if (getProperty("datasource.url") != null) {
 			addRestrictedProperty("datasource.username");

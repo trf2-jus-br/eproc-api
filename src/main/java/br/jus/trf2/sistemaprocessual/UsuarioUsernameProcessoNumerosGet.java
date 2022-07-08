@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameProcessoNumerosGet;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.Processo;
 
@@ -12,7 +13,6 @@ public class UsuarioUsernameProcessoNumerosGet implements IUsuarioUsernameProces
 
 	@Override
 	public void run(Request req, Response resp, SistemaProcessualContext ctx) throws Exception {
-
 		String[] list = req.numeros.split(",");
 		char[] markers = new char[list.length * 2 - 1];
 		for (int i = 0; i < markers.length; i++)
