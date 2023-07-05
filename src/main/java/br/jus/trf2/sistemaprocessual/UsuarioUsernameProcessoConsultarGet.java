@@ -3,6 +3,7 @@ package br.jus.trf2.sistemaprocessual;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import com.crivano.swaggerservlet.PresentableUnloggedException;
@@ -29,7 +30,7 @@ public class UsuarioUsernameProcessoConsultarGet implements IUsuarioUsernameProc
 	        	throw new PresentableUnloggedException("Erro ao acessar limite.consulta.processo", ex);
 	        }
 		
-		
+		DecimalFormat formatoNumeroProcessoEproc = new DecimalFormat("00000000000000000000");
 		try (Connection conn = Utils.getConnection();
 				PreparedStatement q = conn.prepareStatement(Utils
 						.getSQL("processo-consultar-" + (req.documento != null ? "documento" :
@@ -53,7 +54,7 @@ public class UsuarioUsernameProcessoConsultarGet implements IUsuarioUsernameProc
 			resp.list = new ArrayList<>();
 			while (rs.next()) {
 				Processo p = new Processo();
-				p.numero = rs.getString("numero");
+				p.numero = p.numero = formatoNumeroProcessoEproc.format(rs.getBigDecimal("numero"));
 				p.orgao = EprocServlet.INSTANCE.getProperty("orgao.sigla");
 				p.unidade = rs.getString("unidade");
 				p.localNaUnidade = rs.getString("localnaunidade"); // Apresentar

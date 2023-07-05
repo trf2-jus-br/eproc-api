@@ -3,7 +3,9 @@ package br.jus.trf2.sistemaprocessual;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+
 
 
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameProcessoNumerosGet;
@@ -20,6 +22,7 @@ public class UsuarioUsernameProcessoNumerosGet implements IUsuarioUsernameProces
 
 		String statement = Utils.getSQL("processo-validar-numero-get");
 		statement = statement.replace(":list", new String(markers));
+		DecimalFormat formatoNumeroProcessoEproc = new DecimalFormat("00000000000000000000");
 		try (Connection conn = Utils.getConnection(); PreparedStatement q = conn.prepareStatement(statement)) {
 			int i = 1;
 			for (String s : list)
@@ -30,7 +33,7 @@ public class UsuarioUsernameProcessoNumerosGet implements IUsuarioUsernameProces
 			resp.list = new ArrayList<>();
 			while (rs.next()) {
 				Processo p = new Processo();
-				p.numero = rs.getString("numero");
+				p.numero = formatoNumeroProcessoEproc.format(rs.getBigDecimal("numero"));
 				p.orgao = EprocServlet.INSTANCE.getProperty("orgao.sigla");
 				p.unidade = rs.getString("unidade");
 				p.localNaUnidade = rs.getString("localnaunidade"); // Apresentar
