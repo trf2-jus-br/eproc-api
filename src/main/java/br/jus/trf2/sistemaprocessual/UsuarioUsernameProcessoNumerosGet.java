@@ -29,6 +29,7 @@ public class UsuarioUsernameProcessoNumerosGet implements IUsuarioUsernameProces
 				q.setString(i++, s);
 			q.setString(i, req.username);
 			ResultSet rs = q.executeQuery();
+			
 
 			resp.list = new ArrayList<>();
 			while (rs.next()) {
@@ -58,6 +59,8 @@ public class UsuarioUsernameProcessoNumerosGet implements IUsuarioUsernameProces
 				p.reu = rs.getString("reu");
 				resp.list.add(p);
 			}
+			if (q  != null) q.close();
+	        if (conn != null) conn.close();
 		}
 	}
 

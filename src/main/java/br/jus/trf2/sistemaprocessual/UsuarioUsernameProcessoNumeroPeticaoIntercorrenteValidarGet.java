@@ -68,6 +68,7 @@ public class UsuarioUsernameProcessoNumeroPeticaoIntercorrenteValidarGet
 			q4.setString(2, req.username);
 
 			ResultSet rs4 = q4.executeQuery();
+			
 
 			while (rs4.next()) {
 				AvisoPeticaoIntercorrente in = new AvisoPeticaoIntercorrente();
@@ -76,8 +77,14 @@ public class UsuarioUsernameProcessoNumeroPeticaoIntercorrenteValidarGet
 				in.data = rs4.getTimestamp("data");
 				resp.avisos.add(in);
 			}
-
+			if (q  != null) q.close();
+			if (q2 != null) q2.close();
+			if (q3 != null) q3.close();
+			if (q4 != null) q4.close();
+	        if (conn != null) conn.close();
+			
 		}
+		
 	}
 
 	@Override
