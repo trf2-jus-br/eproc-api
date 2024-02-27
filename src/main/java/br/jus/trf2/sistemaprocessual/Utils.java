@@ -4,6 +4,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -148,4 +151,19 @@ public class Utils {
 
 		return (lowercase ? string.toLowerCase() : string);
 	}
+	
+	public static Date formatarData(String dataString) {
+		
+		 SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+
+	        try {
+	            Date data = dateFormat.parse(dataString);
+	            return data;
+	        } catch (ParseException e) {
+	            // Manipulação de erro se a String não puder ser parseada para uma data
+	            e.printStackTrace();
+	        }
+	return null;
+	}
+	
 }

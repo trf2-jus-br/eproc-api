@@ -7,7 +7,7 @@ SELECT
    m.cod_documento documento_cod,
    m.descricao_minuta minuta_descricao,
    m.cod_status_minuta minuta_status,
-   sm.des_status_minuta minuta_status_descr,
+   sm.des_status_minuta minuta_status_descr, 
    p.num_processo processo_numero,
    (
       select
@@ -76,11 +76,11 @@ SELECT
    cas.uuid_versao_conteudo as uuid_cas,
    ui.ident_principal usuario_inclusao_ident,
    pni.nome_pessoa usuario_inclusao_nome,
-   ml.dth_inclusao lembrete_inclusao,
-   ml.id_minuta_lembrete lembrete_id,
-   ml.lembrete lembrete_conteudo,
-   ul.ident_principal lembrete_usuario,
-   pnl.nome_pessoa lembrete_nome,
+   
+   GROUP_CONCAT(
+       CONCAT_WS('|',  ml.id_minuta_lembrete,ml.dth_inclusao,ml.lembrete,ul.ident_principal,pnl.nome_pessoa)
+       SEPARATOR '*') lembretes,
+   
    minuta_bloqueio.id_usuario_bloqueio idusuariobloqueio 
 from
    minuta m 
@@ -139,11 +139,31 @@ from
       pessoa_nome pnl 
       on pl.id_pessoa = pnl.id_pessoa 
       and pl.seq_nome = pnl.seq_nome_pessoa 
+
 where
    m.cod_status_minuta in (2, 4)   
   and
 	 minuta_bloqueio.id_usuario_bloqueio IS NULL 
+group by  
+	juiz,
+   unidade_sigla,
+   minuta_inclusao,
+   m.id_documento,
+    minuta_id,
+  documento_cod,
+    minuta_descricao,
+    minuta_status,
+    minuta_status_descr,
+    processo_numero,
+    processo_autor,
+    processo_reu,   
+   documento_tipo,
+   minuta_conteudo,
+    uuid_cas,
+   usuario_inclusao_ident,
+    usuario_inclusao_nome     
 order by
    u.ident_principal,
    m.dth_inclusao desc,
    m.id_minuta
+LIMIT 100
