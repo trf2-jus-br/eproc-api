@@ -15,6 +15,7 @@ import com.crivano.swaggerservlet.PresentableException;
 import com.crivano.swaggerservlet.SwaggerError;
 import com.crivano.swaggerservlet.SwaggerUtils;
 
+ //import br.jus.trf2.balcaojus.BalcaojusServlet;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.IUsuarioUsernameLocalIdMesaId2DocumentosGet;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.Lembrete;
 import br.jus.trf2.sistemaprocessual.ISistemaProcessual.MesaDocumento;
@@ -54,7 +55,8 @@ public class UsuarioUsernameLocalIdMesaId2DocumentosGet implements IUsuarioUsern
 					d.nomeDoUsuarioQueIncluiu = rs.getString("usuario_inclusao_nome");
 					d.siglaDaUnidade = rs.getString("unidade_sigla");
 					d.conteudo = rs.getString("minuta_conteudo");
-					d.conteudo = this.getConteudoMinuta(rs.getString("uuid_cas"));
+					if (req.ambiente.equals("prod" ))
+						d.conteudo = this.getConteudoMinuta(rs.getString("uuid_cas"));
 					d.lembretes = this.getLembretes(rs.getString("lembretes"));
 					resp.list.add(d);
 									
