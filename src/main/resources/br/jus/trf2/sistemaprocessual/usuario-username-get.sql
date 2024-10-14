@@ -73,6 +73,7 @@ WHERE
          usuario usu 
       WHERE
          usu.id_pessoa = u.id_pessoa 
+         and usu.sin_ativo = 'S'
       GROUP BY
          usu.id_pessoa
    )
