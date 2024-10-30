@@ -78,4 +78,6 @@ WHERE
          usu.id_pessoa
    )
    and exists(select 1 from v_usuario usua where ident_principal=pid.ident_principal and sin_ativo='S')
+   and (exists (select cod_tipo_usuario from usuario where id_pessoa = u.id_pessoa and u.sin_usuario_interno='S' ) 
+    or find_in_set(pessoa_entidade.id_pessoa, (SELECT valor FROM infra_parametro WHERE nome = 'EPROC_HABILITA_ENTIDADE_LOGIN_BALCAOJUS'))>0)
    LIMIT 1

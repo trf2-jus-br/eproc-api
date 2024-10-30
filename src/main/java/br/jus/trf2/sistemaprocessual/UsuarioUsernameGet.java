@@ -63,6 +63,9 @@ public class UsuarioUsernameGet implements IUsuarioUsernameGet, ISwaggerPublicMe
 
 			q2.setString(1, login);
 			ResultSet rs2 = q2.executeQuery();
+			//Se não retornar nehum perfil
+			if (!rs2.isBeforeFirst())
+				throw new PresentableUnloggedException("Perfil de usuário não permitido");
 
 			// TODO: lançar exceção se não houver nome, cpf e email
 			while (rs2.next()) {
