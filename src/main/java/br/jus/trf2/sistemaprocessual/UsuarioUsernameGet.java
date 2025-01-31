@@ -27,7 +27,7 @@ public class UsuarioUsernameGet implements IUsuarioUsernameGet, ISwaggerPublicMe
 		if (auth == null)
 			throw new Exception("Autorização necessária");
 		String authBasic = auth.split("\\s+")[1];
-		String[] authBasicParts = new String(SwaggerUtils.base64Decode(authBasic)).split(":");
+		String[] authBasicParts = new String(SwaggerUtils.base64Decode(authBasic)).split(":",2);
 		login = authBasicParts[0];
 		password = authBasicParts[1];
 
