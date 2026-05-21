@@ -34,7 +34,7 @@ public class Utils {
 		} else {
 			Connection connection = null;
 
-			Class.forName("com.mysql.jdbc.Driver");
+			Class.forName("com.mysql.cj.jdbc.Driver");
 
 			String dbURL = EprocServlet.INSTANCE.getProperty("datasource.url");
 			String username = EprocServlet.INSTANCE.getProperty("datasource.username");
